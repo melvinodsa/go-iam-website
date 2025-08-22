@@ -124,10 +124,20 @@ const meta = {
       "Comprehensive documentation for Go IAM. Learn how to integrate secure identity and access management into your applications.",
     image: "/images/og/docs.jpg",
     canonical: `${baseURL}/docs`,
+    navIcon: "book",
     robots: "index,follow",
     alternates: [{ href: `${baseURL}/docs`, hrefLang: "en" }],
   },
-  // add more routes and reference them in page.tsx
+  // roadmap: {
+  //   path: "/roadmap",
+  //   title: "Go IAM Roadmap",
+  //   description:
+  //     "Explore the future development plans for Go IAM, including upcoming features and improvements.",
+  //   image: "/images/og/roadmap.jpg",
+  //   canonical: `${baseURL}/roadmap`,
+  //   robots: "index,follow",
+  //   alternates: [{ href: `${baseURL}/roadmap`, hrefLang: "en" }],
+  // },
 };
 
 // default schema data
@@ -159,7 +169,7 @@ const layout = {
     collapsible: false, // accordion or static render
   },
   content: {
-    width: 44, // width of the main content block
+    width: 60, // width of the main content block
   },
   sideNav: {
     width: 17, // width of the sideNav on document pages

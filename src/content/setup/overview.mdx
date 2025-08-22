@@ -1,0 +1,93 @@
+---
+title: "Setup Overview"
+updatedAt: "2025-08-22"
+summary: "Overview of different setup options for Go IAM and what you can expect after setup."
+navLabel: "overview"
+navIcon: "tools"
+---
+
+# Setup Overview
+
+Go IAM offers multiple setup options to suit different development and deployment needs. Whether you're just getting started with local development or planning a production deployment, we have you covered.
+
+## Available Setup Options
+
+### 🔧 Manual Setup (Development)
+
+Perfect for developers who want full control over the setup process and understand each component.
+
+**Best for:**
+
+- Development and testing
+- Learning how Go IAM works
+- Custom configurations
+- Contributing to the project
+
+**Requirements:**
+
+- Go 1.21+
+- MongoDB
+- Redis (optional but recommended)
+- Google OAuth Credentials
+
+### 🐳 Docker Setup (Recommended)
+
+The easiest way to get Go IAM running with all components pre-configured.
+
+**Best for:**
+
+- Quick evaluation
+- Local testing
+- Consistent environments
+- CI/CD pipelines
+
+**Includes:**
+
+- MongoDB database
+- Redis caching
+- Go IAM backend
+- Admin UI frontend
+
+## What You'll Get After Setup
+
+Once Go IAM is successfully set up, you'll have access to a comprehensive identity and access management system with a modern admin interface.
+
+<Media
+  src="/images/screenshots/users.png"
+  alt="Go IAM Admin UI - Users Management"
+  style={{
+    borderRadius: "8px",
+    border: "1px solid #eee",
+    marginTop: "20px",
+    marginBottom: "20px",
+  }}
+/>
+
+### Admin UI Features
+
+The admin interface provides intuitive management for:
+
+- **👥 User Management**: Create, edit, and manage user accounts across projects
+- **🏢 Project Organization**: Set up multi-tenant projects with isolated data
+- **🔑 Role & Permissions**: Define custom roles and granular access controls
+- **📱 Client Applications**: Manage multiple apps and their OAuth configurations
+- **📊 Analytics Dashboard**: Monitor authentication events and user activity
+- **⚙️ System Settings**: Configure providers, security settings, and integrations
+
+### API Access
+
+After setup, you'll also have:
+
+- **REST API**: Full-featured API at `http://localhost:3000`
+- **API Documentation**: Interactive docs at `http://localhost:3000/docs`
+- **Authentication Endpoints**: Ready-to-use login, logout, and token management
+- **WebSocket Support**: Real-time notifications and updates
+
+## Next Steps
+
+Choose your preferred setup method:
+
+1. **[Docker Setup](/docs/setup/docker)** - Fastest way to get started
+2. **[Manual Setup](/docs/setup/manual)** - For development and customization
+
+Each setup guide includes step-by-step instructions, troubleshooting tips, and configuration examples to get you up and running quickly.

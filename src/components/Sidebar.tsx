@@ -248,35 +248,35 @@ const SidebarContent: React.FC<{
   };
 
   // Create resources section
-  const resourcesSection = (!(routes['/roadmap'] || routes['/changelog'])) ? null : (
-    <Column gap="2" marginTop="32" paddingLeft="4">
-      <Row textVariant="label-strong-s" onBackground="brand-strong" paddingLeft="8" paddingY="12">
-        Resources
-      </Row>
-      {routes['/roadmap'] && (
-        <ResourceLink
-          href="/roadmap"
-          icon="roadmap"
-          label="Roadmap"
-          pathname={pathname}
-        />
-      )}
+  // const resourcesSection = (!(routes['/roadmap'] || routes['/changelog'])) ? null : (
+  //   <Column gap="2" marginTop="32" paddingLeft="4">
+  //     <Row textVariant="label-strong-s" onBackground="brand-strong" paddingLeft="8" paddingY="12">
+  //       Resources
+  //     </Row>
+  //     {routes['/roadmap'] && (
+  //       <ResourceLink
+  //         href="/roadmap"
+  //         icon="roadmap"
+  //         label="Roadmap"
+  //         pathname={pathname}
+  //       />
+  //     )}
 
-      {routes['/changelog'] && (
-        <ResourceLink
-          href="/changelog"
-          icon="changelog"
-          label="Changelog"
-          pathname={pathname}
-        />
-      )}
-    </Column>
-  );
+  //     {routes['/changelog'] && (
+  //       <ResourceLink
+  //         href="/changelog"
+  //         icon="changelog"
+  //         label="Changelog"
+  //         pathname={pathname}
+  //       />
+  //     )}
+  //   </Column>
+  // );
 
   return (
     <>
       {renderNavigation(navigation, 0)}
-      {resourcesSection}
+      {/* {resourcesSection} */}
     </>
   );
 }, (prevProps, nextProps) => {

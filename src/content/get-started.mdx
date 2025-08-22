@@ -1,30 +1,81 @@
 ---
-title: "Get Started"
-updatedAt: "2024-03-05"
-summary: "Magic Docs is a modern, MDX-based documentation system built with Once UI."
+title: "Get Started with Go IAM"
+updatedAt: "2025-08-22"
+summary: "Go IAM is a lightweight, multi-tenant Identity and Access Management (IAM) server built in Golang."
 image: "/images/og/home.png"
 navLabel: "Quick start"
 navIcon: "rocket"
 ---
 
-Magic Docs is a modern, MDX-based documentation system built with Once UI, providing a seamless and intuitive way to create, organize, and present technical documentation. Designed with both developers and end-users in mind, Magic Docs combines the flexibility of Markdown with the power of React components to deliver a rich documentation experience.
+# Go IAM
 
-## Key Features
+**Go IAM** is a lightweight, multi-tenant Identity and Access Management (IAM) server built in **Golang**. It provides robust authentication and fine-grained authorization for modern applications. With support for custom roles, third-party auth providers, and multi-client setups, Go IAM gives you full control over access management in a scalable and modular way.
 
-Magic Docs offers a comprehensive set of features that make documentation creation and consumption a breeze:
+> ✅ Admin UI: [go-iam-ui](https://github.com/melvinodsa/go-iam-ui)  
+> 🐳 Docker Setup: [go-iam-docker](https://github.com/melvinodsa/go-iam-docker)  
+> 🔐 Backend: [go-iam](https://github.com/melvinodsa/go-iam)  
+> 📦 SDK: [go-iam-sdk](https://github.com/melvinodsa/go-iam-sdk)  
+> 🚀 Examples: [go-iam-examples](https://github.com/melvinodsa/go-iam-examples)
 
-- **MDX Integration**: Write content in Markdown and seamlessly embed React components
-- **Hierarchical Navigation**: Intuitive section-based navigation with custom ordering
-- **Component Showcase**: Interactive examples of Once UI components
-- **Responsive Design**: Perfect viewing experience across all devices
-- **Dark/Light Mode**: Automatic theme switching based on system preferences
-- **Search Functionality**: Powerful command palette for quick content access
-- **SEO Optimization**: Built-in metadata generation for better search engine visibility
-- **Custom Ordering**: Control the exact order of pages using meta.json files
+---
 
-## Built with Once UI
+## ✨ Features
 
-Magic Docs leverages the Once UI component system, providing a consistent, accessible, and beautiful interface. For the complete Magic Docs and Once UI documentation, visit [Once UI](https://docs.once-ui.com).
+### 🔀 Multi-Tenancy
+
+- Create and manage **Projects**
+- Strict **isolation** of data between tenants
+
+### 🔐 Authentication Provider Integration
+
+- Google OAuth login support
+- Easily extendable to add more providers
+- **Shared credentials** support across multiple clients
+
+### 🧩 Client Management
+
+- Multiple apps (clients) per project
+- Avoid duplicate OAuth credentials
+
+### 🧱 Role-Based Access Control (RBAC)
+
+- Define resources and group them into roles
+- Create custom roles and assign to users
+- Granular access control for different actions/resources
+
+### 🛠️ Admin UI
+
+- React-based Admin interface for managing:
+  - Projects
+  - Users
+  - Roles
+  - Resources
+  - Clients
+
+---
+
+## 🧰 Tech Stack
+
+<Table
+  data={{
+    headers: [
+      { content: "Component", key: "component", sortable: true },
+      { content: "Tech", key: "tech", sortable: true },
+    ],
+    rows: [
+      ["Backend", "Golang"],
+      ["Database", "MongoDB"],
+      ["Caching (opt)", "Redis"],
+      ["Frontend", "React + Vite (PNPM)"],
+    ],
+  }}
+/>
+
+---
+
+## License
+
+- Community Edition: [Apache 2.0](https://github.com/melvinodsa/go-iam/blob/main/LICENSE) (Open Source, free to use)
 
 <Grid fillWidth gap="8" columns="2" s={{ columns: 1 }} marginTop="20">
   <PageList path={["components"]} padding="16" />

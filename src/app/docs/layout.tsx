@@ -164,16 +164,7 @@ export default function RootLayout({
               top="64"
               zIndex={9}
             />
-            <Column overflow='auto' style={{ height: "calc(100vh - var(--static-space-64) - var(--static-space-12) - (var(--responsive-space-m)*3))", flex: 1 }} maxWidth={layout.content.width} gap="l" paddingBottom="xl" paddingLeft='16' paddingRight='16'>
-              {children}
-            </Column>
-            <Column gap="16" maxWidth={layout.sideNav.width} m={{ hide: true }} position="sticky" top="80" fitHeight>
-              <Row gap="12" paddingLeft="2" vertical="center" onBackground="neutral-medium" textVariant="label-default-s">
-                <Icon name="document" size="xs" />
-                On this page
-              </Row>
-              <HeadingNav />
-            </Column>
+            {children}
           </Row>
           <Footer />
         </Column>

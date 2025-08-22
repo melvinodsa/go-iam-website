@@ -9,6 +9,7 @@ import { Sidebar, NavigationItem } from "./Sidebar";
 function Navbar() {
     const [isMac, setIsMac] = useState(false);
     const pathname = usePathname();
+    const isDocsPage = pathname.startsWith('/docs');
 
     useEffect(() => {
         setIsMac(navigator.userAgent.toLowerCase().indexOf('mac') !== -1);
@@ -50,8 +51,8 @@ function Navbar() {
                     section: "Documentation",
                     shortcut: [],
                     keywords: keywords,
-                    href: `/${correctedSlug}`,
-                    icon: item.navIcon || "document",
+                    href: `/docs/${correctedSlug}`,
+                    icon: item.navIcon || "book",
                 });
             }
         });
@@ -74,29 +75,29 @@ function Navbar() {
         }
     ];
 
-    if (routes['/changelog']) {
-        navigationKbarItems.push({
-            id: "changelog",
-            name: "Changelog",
-            section: "Navigation",
-            shortcut: [],
-            keywords: "changelog, changelog page",
-            href: "/changelog",
-            icon: "changelog",
-        });
-    }
+    // if (routes['/changelog']) {
+    //     navigationKbarItems.push({
+    //         id: "changelog",
+    //         name: "Changelog",
+    //         section: "Navigation",
+    //         shortcut: [],
+    //         keywords: "changelog, changelog page",
+    //         href: "/changelog",
+    //         icon: "changelog",
+    //     });
+    // }
 
-    if (routes['/roadmap']) {
-        navigationKbarItems.push({
-            id: "roadmap",
-            name: "Roadmap",
-            section: "Navigation",
-            shortcut: [],
-            keywords: "roadmap, roadmap page",
-            href: "/roadmap",
-            icon: "roadmap",
-        });
-    }
+    // if (routes['/roadmap']) {
+    //     navigationKbarItems.push({
+    //         id: "roadmap",
+    //         name: "Roadmap",
+    //         section: "Navigation",
+    //         shortcut: [],
+    //         keywords: "roadmap, roadmap page",
+    //         href: "/roadmap",
+    //         icon: "roadmap",
+    //     });
+    // }
 
     const kbar = [
         ...navigationKbarItems,
@@ -132,27 +133,18 @@ function Navbar() {
                         <Logo className="dark-flex" wordmark="/trademarks/wordmark-dark.svg" size="s" href="/" />
                         <Logo className="light-flex" wordmark="/trademarks/wordmark-light.svg" size="s" href="/" />
                     </Row>
-                    <Kbar hide="m" items={kbar} radius="full" background="neutral-alpha-weak">
+                    {isDocsPage && <Kbar items={kbar} radius="full" background="neutral-alpha-weak">
                         <Button data-border="rounded" size="s" variant="tertiary" weight="default">
                             <Row vertical="center" gap="16" style={{ marginLeft: '-0.5rem' }} paddingRight="8">
                                 <Row background="neutral-alpha-medium" paddingX="8" paddingY="4" radius="full" data-scaling="90" textVariant="body-default-xs" onBackground="neutral-medium">{isMac ? 'Cmd' : 'Ctrl'} k</Row>
                                 Search docs...
                             </Row>
                         </Button>
-                    </Kbar>
-                    {/* <Row fillWidth horizontal="end" gap="8" data-border="rounded">
-                        <Row s={{ hide: true }}>
-                            <Button size="s" variant="secondary" href="https://once-ui.com/products">
-                                Start building
-                            </Button>
-                        </Row>
-                        <Button href="https://once-ui.com/auth" size="s">
-                            Sign up
-                        </Button>
-                    </Row> */}
+                    </Kbar>}
                     <Row gap="m" style={{ display: "flex", alignItems: "center" }}>
                         <Button
                             href={social.docs}
+                            prefixIcon="book"
                             variant="secondary"
                             size="s"
                         >

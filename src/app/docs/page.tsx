@@ -40,9 +40,9 @@ export default async function Docs() {
   const sectionTitle = 'Getting Started';
 
   return (
-    <Row fillWidth horizontal="center">
-      <Row fillWidth horizontal="center">
-        <Column as="main" maxWidth={layout.content.width} gap="l" paddingBottom="xl">
+    <Row>
+      <Row >
+        <Column as="main" maxWidth={layout.content.width} gap="l" paddingBottom="xl" overflow='auto' marginLeft='16' marginRight='16'>
           <Schema
             as="techArticle"
             title={doc.metadata.title + " – " + schema.name}
@@ -131,6 +131,14 @@ export default async function Docs() {
           </Row>
         </Column>
       </Row>
+
+      <Column gap="16" maxWidth={layout.sideNav.width} m={{ hide: true }} position="sticky" top="80" fitHeight>
+        <Row gap="12" paddingLeft="2" vertical="center" onBackground="neutral-medium" textVariant="label-default-s">
+          <Icon name="document" size="xs" />
+          On this page
+        </Row>
+        <HeadingNav />
+      </Column>
     </Row>
   );
 }
