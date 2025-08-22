@@ -1,5 +1,5 @@
 // IMPORTANT: Replace with your own domain address - it's used for SEO in meta tags and schema
-const baseURL = "https://demo.once-ui.com";
+const baseURL = process.env.NEXT_PUBLIC_BASE_URL || "https://go-iam.com";
 
 // Import and set font for each variant
 import { Geist } from "next/font/google";
@@ -60,7 +60,7 @@ const dataStyle = {
   tick: {
     fill: "var(--neutral-on-background-weak)",
     fontSize: 11,
-    line: false
+    line: false,
   },
 };
 
@@ -109,13 +109,23 @@ const effects = {
 const meta = {
   home: {
     path: "/",
-    title: "Once UI for Next.js",
+    title: "Go IAM - Modern Identity & Access Management",
     description:
-      "An open-source design system and component library for Next.js that emphasizes easy styling and accessibility in UI development.",
+      "API-first, developer-centric Identity and Access Management system built in Go for modern applications. Open source, secure, and scalable.",
     image: "/images/og/home.jpg",
-    canonical: "https://once-ui.com",
+    canonical: baseURL,
     robots: "index,follow",
-    alternates: [{ href: "https://once-ui.com", hrefLang: "en" }],
+    alternates: [{ href: baseURL, hrefLang: "en" }],
+  },
+  docs: {
+    path: "/docs",
+    title: "Go IAM Documentation - Getting Started",
+    description:
+      "Comprehensive documentation for Go IAM. Learn how to integrate secure identity and access management into your applications.",
+    image: "/images/og/docs.jpg",
+    canonical: `${baseURL}/docs`,
+    robots: "index,follow",
+    alternates: [{ href: `${baseURL}/docs`, hrefLang: "en" }],
   },
   // add more routes and reference them in page.tsx
 };
@@ -124,16 +134,59 @@ const meta = {
 const schema = {
   logo: "",
   type: "Organization",
-  name: "Once UI",
+  name: "Go IAM",
   description: meta.home.description,
-  email: "lorant@once-ui.com",
+  email: "contact@go-iam.com",
+  locale: "en_US",
 };
 
 // social links
 const social = {
-  twitter: "https://www.twitter.com/_onceui",
-  linkedin: "https://www.linkedin.com/company/once-ui/",
-  discord: "https://discord.com/invite/5EyAQ4eNdS",
+  github: "https://github.com/melvinodsa/go-iam",
+  docs: `${baseURL}/docs`,
 };
 
-export { baseURL, fonts, style, meta, schema, social, effects, dataStyle };
+const layout = {
+  // units are set in REM
+  header: {
+    width: 200, // max-width of the content inside the header
+  },
+  body: {
+    width: 200, // max-width of the body
+  },
+  sidebar: {
+    width: 17, // width of the sidebar
+    collapsible: false, // accordion or static render
+  },
+  content: {
+    width: 44, // width of the main content block
+  },
+  sideNav: {
+    width: 17, // width of the sideNav on document pages
+  },
+  footer: {
+    width: 44, // width of the content inside the footer
+  },
+  leftSidebar: {
+    width: 44, // width of the left sidebar
+    collapsible: false, // accordion or static render
+  },
+};
+
+const routes = {
+  "/changelog": true,
+  "/roadmap": true,
+};
+
+export {
+  baseURL,
+  fonts,
+  style,
+  meta,
+  schema,
+  social,
+  effects,
+  dataStyle,
+  layout,
+  routes,
+};

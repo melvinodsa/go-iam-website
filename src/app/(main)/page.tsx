@@ -5,52 +5,265 @@ import {
   Text,
   Button,
   Column,
+  Row,
   Badge,
   Logo,
-  Line,
   LetterFx,
+  Icon,
+  Flex,
+  Media,
+  GlitchFx,
 } from "@once-ui-system/core";
+import { social } from "@/resources/once-ui.config";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 
 export default function Home() {
   return (
-    <Column fillWidth center padding="l" style={{ minHeight: "100vh" }}>
-      <Column maxWidth="s" horizontal="center" gap="l" align="center">
-        <Badge
-          textVariant="code-default-s"
-          border="neutral-alpha-medium"
-          onBackground="neutral-medium"
-          vertical="center"
-          gap="16"
-        >
-          <Logo dark icon="/trademarks/wordmark-dark.svg" href="https://once-ui.com" size="xs" />
-          <Logo light icon="/trademarks/wordmark-light.svg" href="https://once-ui.com" size="xs" />
-          <Line vert background="neutral-alpha-strong" />
-          <Text marginX="4">
-            <LetterFx trigger="instant">An ecosystem, not a UI kit</LetterFx>
-          </Text>
-        </Badge>
-        <Heading variant="display-strong-xl" marginTop="24">
-          Presence that doesn't beg for attention
-        </Heading>
-        <Text
-          variant="heading-default-xl"
-          onBackground="neutral-weak"
-          wrap="balance"
-          marginBottom="16"
-        >
-          Build with clarity, speed, and quiet confidence
-        </Text>
-        <Button
-          id="docs"
-          href="https://docs.once-ui.com/once-ui/quick-start"
-          data-border="rounded"
-          weight="default"
-          prefixIcon="copy"
-          arrowIcon
-        >
-          Explore docs
-        </Button>
+    <Column fillWidth style={{ minHeight: "100vh" }}>
+      {/* Navigation */}
+      <Navbar />
+
+      {/* Hero Section */}
+      <Column
+        fillWidth
+        center
+        padding="xl"
+        style={{ minHeight: "100vh", paddingTop: "120px" }}
+      >
+        <Column maxWidth="xl" horizontal="center" gap="xl" align="center">
+          <Badge
+            textVariant="code-default-s"
+            border="brand-alpha-medium"
+            onBackground="brand-medium"
+            vertical="center"
+            gap="16"
+          >
+            <Icon name="shield" size="xs" />
+            <Text marginX="4">
+              <LetterFx trigger="instant">Open Source IAM Platform</LetterFx>
+            </Text>
+          </Badge>
+
+          <Row>
+            <GlitchFx fillWidth speed="medium">
+              <Row maxWidth={18} height={18}>
+                <Media
+                  radius="l"
+                  src="/images/og/home.png"
+                />
+              </Row>
+            </GlitchFx>
+          </Row>
+
+
+
+          <Heading
+            variant="display-strong-xl"
+            marginTop="24"
+            align="center"
+          >
+            Modern Identity & Access Management
+            <br />
+            <Text onBackground="brand-strong">Built for Developers</Text>
+          </Heading>
+
+          <Column maxWidth="l">
+            <Text
+              variant="heading-default-xl"
+              onBackground="neutral-weak"
+              wrap="balance"
+              align="center"
+              marginBottom="32"
+            >
+              API-first, developer-centric IAM platform built in Go.
+              Secure, scalable, and designed for modern applications.
+            </Text>
+          </Column>
+
+          <Row gap="m" wrap style={{ display: "flex", justifyContent: "center" }}>
+            <Button
+              href={social.docs}
+              data-border="rounded"
+              weight="strong"
+              prefixIcon="book"
+              arrowIcon
+              size="l"
+            >
+              Get Started
+            </Button>
+            <Button
+              href={social.github}
+              variant="secondary"
+              data-border="rounded"
+              prefixIcon="github"
+              size="l"
+              target="_blank"
+            >
+              View on GitHub
+            </Button>
+          </Row>
+        </Column>
       </Column>
+
+      {/* Features Section */}
+      <Column fillWidth padding="xl" background="neutral-weak" horizontal="center" gap="xl" align="center">
+        <Column maxWidth="xl" fillWidth gap="xl">
+          <Column gap="m" align="center">
+            <Heading variant="display-default-l" align="center">
+              Why Choose Go IAM?
+            </Heading>
+            <Column maxWidth="l">
+              <Text
+                variant="heading-default-m"
+                onBackground="neutral-weak"
+                align="center"
+              >
+                Built with modern development practices and enterprise security in mind
+              </Text>
+            </Column>
+          </Column>
+
+          <Row gap="l" wrap style={{ display: "flex", justifyContent: "center" }}>
+            <Column
+              maxWidth="s"
+              gap="m"
+              padding="l"
+              background="page"
+              radius="l"
+              border="neutral-alpha-weak"
+            >
+              <Icon name="code" size="l" onBackground="brand-strong" />
+              <Heading variant="heading-strong-l">API-First Design</Heading>
+              <Text onBackground="neutral-weak">
+                RESTful APIs with comprehensive OpenAPI documentation.
+                Easy integration with any application or service.
+              </Text>
+            </Column>
+
+            <Column
+              maxWidth="s"
+              gap="m"
+              padding="l"
+              background="page"
+              radius="l"
+              border="neutral-alpha-weak"
+            >
+              <Icon name="zap" size="l" onBackground="brand-strong" />
+              <Heading variant="heading-strong-l">High Performance</Heading>
+              <Text onBackground="neutral-weak">
+                Built in Go for superior performance and low resource usage.
+                Handle thousands of authentication requests per second.
+              </Text>
+            </Column>
+
+            <Column
+              maxWidth="s"
+              gap="m"
+              padding="l"
+              background="page"
+              radius="l"
+              border="neutral-alpha-weak"
+            >
+              <Icon name="shield" size="l" onBackground="brand-strong" />
+              <Heading variant="heading-strong-l">Enterprise Security</Heading>
+              <Text onBackground="neutral-weak">
+                JWT tokens, and role-based access control.
+                Security best practices built-in.
+              </Text>
+            </Column>
+
+            <Column
+              maxWidth="s"
+              gap="m"
+              padding="l"
+              background="page"
+              radius="l"
+              border="neutral-alpha-weak"
+            >
+              <Icon name="layers" size="l" onBackground="brand-strong" />
+              <Heading variant="heading-strong-l">Developer Friendly</Heading>
+              <Text onBackground="neutral-weak">
+                Clean configuration, comprehensive docs, and SDKs for popular languages.
+                Get up and running in minutes.
+              </Text>
+            </Column>
+
+            <Column
+              maxWidth="s"
+              gap="m"
+              padding="l"
+              background="page"
+              radius="l"
+              border="neutral-alpha-weak"
+            >
+              <Icon name="box" size="l" onBackground="brand-strong" />
+              <Heading variant="heading-strong-l">Easy Deployment</Heading>
+              <Text onBackground="neutral-weak">
+                Single binary deployment, Docker support, and cloud-native design.
+                Deploy anywhere with minimal setup.
+              </Text>
+            </Column>
+
+            <Column
+              maxWidth="s"
+              gap="m"
+              padding="l"
+              background="page"
+              radius="l"
+              border="neutral-alpha-weak"
+            >
+              <Icon name="github" size="l" onBackground="brand-strong" />
+              <Heading variant="heading-strong-l">Open Source</Heading>
+              <Text onBackground="neutral-weak">
+                Fully open source with active community.
+                No vendor lock-in, full transparency and customization.
+              </Text>
+            </Column>
+          </Row>
+        </Column>
+      </Column>
+
+      {/* CTA Section */}
+      <Column fillWidth center padding="xl">
+        <Column maxWidth="l" gap="l" align="center">
+          <Heading variant="display-default-l" align="center">
+            Ready to Secure Your Applications?
+          </Heading>
+          <Text
+            variant="heading-default-m"
+            onBackground="neutral-weak"
+            align="center"
+          >
+            Join developers who trust Go IAM for their identity and access management needs
+          </Text>
+          <Row gap="m" wrap style={{ display: "flex", justifyContent: "center" }}>
+            <Button
+              href={social.docs}
+              data-border="rounded"
+              weight="strong"
+              prefixIcon="book"
+              arrowIcon
+              size="l"
+            >
+              Read Documentation
+            </Button>
+            <Button
+              href={social.github}
+              variant="secondary"
+              data-border="rounded"
+              prefixIcon="download"
+              size="l"
+              target="_blank"
+            >
+              Download Now
+            </Button>
+          </Row>
+        </Column>
+      </Column>
+
+      {/* Footer */}
+      <Footer />
     </Column>
   );
 }
