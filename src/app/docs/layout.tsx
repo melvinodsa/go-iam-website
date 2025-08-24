@@ -113,54 +113,14 @@ export default function RootLayout({
       </head>
       <Providers>
         <Column as="body" background="page" fillWidth margin="0" padding="0">
-          <Background
-            position="absolute"
-            mask={{
-              x: effects.mask.x,
-              y: effects.mask.y,
-              radius: effects.mask.radius,
-              cursor: effects.mask.cursor,
-            }}
-            gradient={{
-              display: effects.gradient.display,
-              opacity: effects.gradient.opacity as opacity,
-              x: effects.gradient.x,
-              y: effects.gradient.y,
-              width: effects.gradient.width,
-              height: effects.gradient.height,
-              tilt: effects.gradient.tilt,
-              colorStart: effects.gradient.colorStart,
-              colorEnd: effects.gradient.colorEnd,
-            }}
-            dots={{
-              display: effects.dots.display,
-              opacity: effects.dots.opacity as opacity,
-              size: effects.dots.size as SpacingToken,
-              color: effects.dots.color,
-            }}
-            grid={{
-              display: effects.grid.display,
-              opacity: effects.grid.opacity as opacity,
-              color: effects.grid.color,
-              width: effects.grid.width,
-              height: effects.grid.height,
-            }}
-            lines={{
-              display: effects.lines.display,
-              opacity: effects.lines.opacity as opacity,
-              size: effects.lines.size as SpacingToken,
-              thickness: effects.lines.thickness,
-              angle: effects.lines.angle,
-              color: effects.lines.color,
-            }}
-          />
-          {/* Navigation */}
           <Navbar />
-          <Row marginTop="64" style={{ height: "calc(100vh - var(--static-space-64) - var(--static-space-12) - (var(--responsive-space-m)*3))" }} horizontal="center">
+          <Row marginTop="64" style={{ height: "calc(100vh - var(--static-space-64) - var(--static-space-12) - (var(--responsive-space-m)*3))" }} horizontal="start">
             <Sidebar
               maxWidth={100}
-              style={{ height: "calc(100vh - var(--static-space-64)*3)", borderTop: "0", borderRight: "0" }}
+              style={{ height: "calc(100vh - var(--static-space-64)*2)", borderTop: "0", borderRight: "0" }}
               padding="8"
+              marginLeft='128'
+              s={{ style: { marginLeft: '0' } }}
               top="64"
               zIndex={9}
             />

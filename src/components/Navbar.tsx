@@ -129,7 +129,7 @@ function Navbar() {
                     justifyContent: "space-between",
                     alignItems: "center"
                 }}>
-                    <Row marginLeft="64" m={{ margin: '0' }} fillWidth vertical="center" gap="8">
+                    <Row marginLeft="128" m={{ margin: '0' }} fillWidth vertical="center" gap="8">
                         <Logo className="dark-flex" wordmark="/trademarks/wordmark-dark.svg" size="s" href="/" />
                         <Logo className="light-flex" wordmark="/trademarks/wordmark-light.svg" size="s" href="/" />
                     </Row>

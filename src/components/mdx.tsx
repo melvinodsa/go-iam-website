@@ -1,4 +1,5 @@
 import { MDXRemote, MDXRemoteProps } from "next-mdx-remote/rsc";
+
 import React, { ReactNode } from "react";
 
 import {
@@ -12,7 +13,6 @@ import {
   InlineCode,
   Accordion,
   AccordionGroup,
-  CodeBlock,
   TextProps,
   HeadingLink,
   MediaProps,
@@ -26,6 +26,7 @@ import {
   Line,
 } from "@once-ui-system/core";
 import { PageList } from "./PageList";
+import { CodeBlock } from "@/components/code/CodeBlock";
 
 const onceUIComponents = {
   Table,
@@ -180,7 +181,8 @@ function createCodeBlock(props: any) {
         marginBottom="16"
         codes={[
           {
-            code: children,
+            code:
+              children,
             language,
             label
           }

@@ -1,5 +1,8 @@
-{ 
+{
   "pages": {
-    "get-started": 1
+    "get-started": 1,
+    "setup": 2,
+    "sdk": 3,
+    "basics": 4
   }
 }

@@ -1,0 +1,70 @@
+---
+title: "Overview"
+updatedAt: "2025-08-22"
+summary: "Step-by-step guide to configure your Go IAM client after setup is complete."
+image: "/images/og/home.png"
+navLabel: "Client SDKs"
+navIcon: "sdk"
+---
+
+# Integrating Go IAM SDK
+
+The Go IAM SDK provides comprehensive multi-language support for integrating authentication and authorization into your applications. Choose your preferred language and follow the integration steps below.
+
+## Available SDKs
+
+<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 my-6">
+  <div className="border rounded-lg p-4">
+    <h3 className="font-semibold mb-2">🐹 Go</h3>
+    <p className="text-sm text-gray-600">Server-side applications</p>
+  </div>
+  <div className="border rounded-lg p-4">
+    <h3 className="font-semibold mb-2">📘 TypeScript</h3>
+    <p className="text-sm text-gray-600">Node.js and browser apps</p>
+  </div>
+  <div className="border rounded-lg p-4">
+    <h3 className="font-semibold mb-2">🐍 Python</h3>
+    <p className="text-sm text-gray-600">Python with async support</p>
+  </div>
+  <div className="border rounded-lg p-4">
+    <h3 className="font-semibold mb-2">🦀 Rust</h3>
+    <p className="text-sm text-gray-600">High-performance applications</p>
+  </div>
+  <div className="border rounded-lg p-4">
+    <h3 className="font-semibold mb-2">⚛️ React</h3>
+    <p className="text-sm text-gray-600">Frontend with hooks & components</p>
+  </div>
+</div>
+
+## SDK Feature Matrix
+
+<Table
+  data={{
+    headers: [
+      { content: "Feature", key: "feature"},
+      { content: "Go", key: "go" },
+      { content: "TypeScript", key: "typescript" },
+      { content: "Python", key: "python" },
+      { content: "Rust", key: "rust" },
+      { content: "React", key: "react" },
+    ],
+    rows: [
+      ["Authentication", "✅", "✅", "✅", "✅", "✅"],
+      ["User Management", "✅", "✅", "✅", "✅", "✅"],
+      ["Resource Management", "✅", "✅", "✅", "✅", "N/A"],
+      ["Context Provider", "N/A", "N/A", "N/A", "N/A", "✅"],
+      ["Auth Guards", "N/A", "N/A", "N/A", "N/A", "✅"],
+      ["Role-based Access", "✅", "✅", "✅", "✅", "✅"],
+      ["TypeScript Support", "N/A", "✅", "N/A", "N/A", "✅"],
+      ["Async/Await", "N/A", "✅", "✅", "✅", "✅"],
+    ],
+  }}
+/>
+
+## Prerequisites
+
+Before integrating the SDK, ensure you have:
+
+1. **Go IAM Server** running (see [Setup Overview](/docs/setup/overview))
+2. **Client credentials** from your Go IAM admin panel
+3. **Base URL** of your Go IAM server instance

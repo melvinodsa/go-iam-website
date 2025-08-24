@@ -132,7 +132,7 @@ export default async function Docs() {
         </Column>
       </Row>
 
-      <Column gap="16" maxWidth={layout.sideNav.width} m={{ hide: true }} position="sticky" top="80" fitHeight>
+      <Column gap="16" maxWidth={layout.sideNav.width} m={{ hide: true }} position="sticky" top="80" overflow="auto" style={{ height: "calc(100vh - var(--static-space-80))" }}>
         <Row gap="12" paddingLeft="2" vertical="center" onBackground="neutral-medium" textVariant="label-default-s">
           <Icon name="document" size="xs" />
           On this page

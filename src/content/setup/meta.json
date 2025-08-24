@@ -1,6 +1,9 @@
 {
   "title": "Setup",
   "pages": {
-    "overview": 1
+    "overview": 1,
+    "docker-setup": 2,
+    "local-setup": 3,
+    "configure-client": 4
   }
 }

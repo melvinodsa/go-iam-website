@@ -1,0 +1,85 @@
+---
+title: "Configure Client"
+updatedAt: "2025-08-22"
+summary: "Step-by-step guide to configure your Go IAM client after setup is complete."
+image: "/images/og/home.png"
+navLabel: "Configure Client"
+navIcon: "ready"
+---
+
+# Configure Client
+
+After successfully setting up Go IAM backend and UI, you need to configure your client to start using the authentication system. Else the application will be running in **\*insecure mode**. This guide walks you through the essential steps to get your client application connected and ready for authentication.
+
+## Video Tutorial
+
+Watch this comprehensive video tutorial that demonstrates the entire client configuration process:
+
+<Media
+  src="https://www.youtube.com/embed/k6DakLyca_s"
+  radius="1"
+  style={{
+    width: "800px",
+    height: "517.12px",
+  }}
+  allowFullScreen
+  title="Go IAM Client Configuration Tutorial"
+/>
+
+## Configuration Steps
+
+Follow these three essential steps to configure your Go IAM client:
+
+### Step 1: Setup Auth Provider
+
+Before your applications can authenticate users, you need to configure authentication providers in the Go IAM admin interface.
+
+#### Google OAuth Setup
+
+1. **Access Admin UI**: Navigate to your Go IAM admin interface (typically `http://localhost:4173`)
+2. **Go to Auth Providers**: Click on "Auth Providers" in the sidebar
+3. **Add Auth Provider**: Click "Add". Give a name. By default "Google" provider will be selected
+4. **Configure Credentials**:
+   - **Client ID**: Your Google OAuth 2.0 client ID
+   - **Client Secret**: Your Google OAuth 2.0 client secret
+   - **Redirect URI**: Configure the callback URL for your application
+   - You can follow the [official documentation](https://developers.google.com/identity/protocols/oauth2) for more info.
+5. **Save Provider**: Click "Save changes" to store the provider settings
+
+#### Getting Google OAuth Credentials
+
+If you don't have Google OAuth credentials:
+
+1. Go to [Google Cloud Console](https://console.cloud.google.com/)
+2. Create or select a project
+3. Navigate to "APIs & Services" > "Credentials"
+4. Click "Create Credentials" > "OAuth 2.0 Client IDs"
+5. Configure the OAuth consent screen if required
+6. Set the application type and authorized redirect URIs
+7. Copy the generated Client ID and Client Secret
+
+### Step 2: Setup Client
+
+After configuring the auth provider, you need to register your client application. Clients are meant of client applications to use go iam.
+
+#### Register Your Application
+
+1. **Navigate to Clients**: In the admin UI, go to "Clients" section
+2. **Create New Client**: Click "Add" button
+3. **Configure Client Details**:
+   - **Client Name**: A descriptive name for your application. Eg: Go IAM Auth
+   - **Description**: Description of your client**.**
+   - **Tags**: Comma separated tags. Eg: goiam
+   - **Default Client**: Check _Set as Go IAM Client_ checkbox. This makes sure this client has to be used by Go IAM for its own auth purpose.
+   - **Redirect Urls**: When you check _Set as Go IAM Client_, the redirect url will be automatically set to `<baseUrl>/verify`
+4. **Select Auth Providers**: Choose which auth providers this client can use. The one you created in the previous step
+5. **Save Client**: Click "Save Changes" to create the client
+
+### Step 3: Login
+
+With the auth provider and client configured, you will be automatically logged out of the system. You can login with credentials. Now we are good to go to integrate go iam with your client applications.
+
+
+### Step 4: Client for your application
+
+You can setup clients for your applications. The steps are same as [1](#step-1-setup-auth-provider) and [2](#step-2-setup-client). You can setup one auth provider and use it for multiple clients. _Set as Go IAM Client_ option won't be available and not required for creating clients for your application. 

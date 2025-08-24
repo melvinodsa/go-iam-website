@@ -170,6 +170,7 @@ const layout = {
   },
   content: {
     width: 60, // width of the main content block
+    minWidth: 42,
   },
   sideNav: {
     width: 17, // width of the sideNav on document pages

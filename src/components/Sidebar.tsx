@@ -134,7 +134,7 @@ const NavigationItemComponent: React.FC<{
               paddingLeft="4"
               paddingTop="4">
               <Row
-                paddingY="12" paddingLeft="8" textVariant="label-strong-s" onBackground="brand-strong">
+                paddingY="8" paddingLeft="8" textVariant="label-strong-s" onBackground="brand-strong">
                 {item.title}
               </Row>
               {renderNavigation(item.children, depth + 1)}
@@ -248,35 +248,65 @@ const SidebarContent: React.FC<{
   };
 
   // Create resources section
-  // const resourcesSection = (!(routes['/roadmap'] || routes['/changelog'])) ? null : (
-  //   <Column gap="2" marginTop="32" paddingLeft="4">
-  //     <Row textVariant="label-strong-s" onBackground="brand-strong" paddingLeft="8" paddingY="12">
-  //       Resources
-  //     </Row>
-  //     {routes['/roadmap'] && (
-  //       <ResourceLink
-  //         href="/roadmap"
-  //         icon="roadmap"
-  //         label="Roadmap"
-  //         pathname={pathname}
-  //       />
-  //     )}
+  const resourcesSection = (!(routes['/roadmap'] || routes['/changelog'])) ? null : (
+    <Column gap="1" marginTop="16" paddingLeft="4">
+      <Row textVariant="label-strong-s" onBackground="brand-strong" paddingLeft="8" paddingY="12">
+        Resources
+      </Row>
+      {/* {routes['/roadmap'] && (
+        <ResourceLink
+          href="/roadmap"
+          icon="roadmap"
+          label="Roadmap"
+          pathname={pathname}
+        />
+      )}
 
-  //     {routes['/changelog'] && (
-  //       <ResourceLink
-  //         href="/changelog"
-  //         icon="changelog"
-  //         label="Changelog"
-  //         pathname={pathname}
-  //       />
-  //     )}
-  //   </Column>
-  // );
+      {routes['/changelog'] && (
+        <ResourceLink
+          href="/changelog"
+          icon="changelog"
+          label="Changelog"
+          pathname={pathname}
+        />
+      )} */}
+      <ResourceLink
+        href="https://github.com/melvinodsa/go-iam-ui"
+        icon="admin"
+        label="Admin UI"
+        pathname={"go-iam-ui"}
+      />
+      <ResourceLink
+        href="https://github.com/melvinodsa/go-iam-docker"
+        icon="docker"
+        label="Docker Setup"
+        pathname={"go-iam-docker"}
+      />
+      <ResourceLink
+        href="https://github.com/melvinodsa/go-iam"
+        icon="server"
+        label="Backend"
+        pathname={"go-iam"}
+      />
+      <ResourceLink
+        href="https://github.com/melvinodsa/go-iam-sdk"
+        icon="sdk"
+        label="SDK"
+        pathname={"go-iam-sdk"}
+      />
+      <ResourceLink
+        href="https://github.com/melvinodsa/go-iam-examples"
+        icon="rocket"
+        label="Examples"
+        pathname={"go-iam-examples"}
+      />
+    </Column>
+  );
 
   return (
     <>
       {renderNavigation(navigation, 0)}
-      {/* {resourcesSection} */}
+      {resourcesSection}
     </>
   );
 }, (prevProps, nextProps) => {
