@@ -97,21 +97,58 @@ The SDK provides the following main classes:
 
 ```python
 class User:
-    id: str
-    project_id: str
-    name: str
-    email: str
-    phone: str
-    enabled: bool
-    profile_pic: str
-    expiry: Optional[str]
-    roles: Dict[str, UserRole]
-    resources: Dict[str, UserResource]
-    policies: Dict[str, str]
-    created_at: Optional[str]
-    created_by: str
-    updated_at: Optional[str]
-    updated_by: str
+    def __init__(self, data: Dict[str, Any]):
+        self.id: str = data.get("id", "")
+        self.project_id: str = data.get("project_id", "")
+        self.name: str = data.get("name", "")
+        self.email: str = data.get("email", "")
+        self.phone: str = data.get("phone", "")
+        self.enabled: bool = data.get("enabled", False)
+        self.profile_pic: str = data.get("profile_pic", "")
+        self.expiry: Optional[str] = data.get("expiry")
+        self.roles: Dict[str, "UserRole"] = {
+            k: UserRole(v) for k, v in data.get("roles", {}).items()
+        }
+        self.resources: Dict[str, "UserResource"] = {
+            k: UserResource(v) for k, v in data.get("resources", {}).items()
+        }
+        self.policies: Dict[str, str] = data.get("policies", {})
+        self.created_at: Optional[str] = data.get("created_at")
+        self.created_by: str = data.get("created_by", "")
+        self.updated_at: Optional[str] = data.get("updated_at")
+        self.updated_by: str = data.get("updated_by", "")
+
+
+class UserPolicy:
+    def __init__(self, data: Dict[str, Any]):
+        self.name: str = data.get("name", "")
+        self.mapping: UserPolicyMapping = UserPolicyMapping(data.get("mapping", {}))
+
+
+class UserPolicyMapping:
+    def __init__(self, data: Dict[str, Any]):
+        self.arguments: Dict[str, UserPolicyMappingValue] = {
+            k: UserPolicyMappingValue(v) for k, v in data.get("arguments", {}).items()
+        }
+
+
+class UserPolicyMappingValue:
+    def __init__(self, data: Dict[str, Any]):
+        self.static: str = data.get("static", "")
+
+
+class UserRole:
+    def __init__(self, data: Dict[str, Any]):
+        self.id: str = data.get("id", "")
+        self.name: str = data.get("name", "")
+
+
+class UserResource:
+    def __init__(self, data: Dict[str, Any]):
+        self.role_ids: Dict[str, bool] = data.get("role_ids", {})
+        self.policy_ids: Dict[str, bool] = data.get("policy_ids", {})
+        self.key: str = data.get("key", "")
+        self.name: str = data.get("name", "")
 ```
 
 ### Resource

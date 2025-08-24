@@ -98,15 +98,40 @@ interface User {
   email: string;
   phone: string;
   enabled: boolean;
-  profilePic: string;
+  profile_pic: string;
   expiry?: string;
   roles: Record<string, UserRole>;
   resources: Record<string, UserResource>;
-  policies: Record<string, string>;
-  createdAt?: string;
-  createdBy: string;
-  updatedAt?: string;
-  updatedBy: string;
+  policies: Record<string, UserPolicy>;
+  created_at?: string;
+  created_by: string;
+  updated_at?: string;
+  updated_by: string;
+}
+
+interface UserPolicy {
+  name: string;
+  mapping: UserPolicyMapping;
+}
+
+interface UserPolicyMapping {
+  arguments: Record<string, UserPolicyMappingValue>;
+}
+
+interface UserPolicyMappingValue {
+  static: string;
+}
+
+interface UserRole {
+  id: string;
+  name: string;
+}
+
+interface UserResource {
+  role_ids: { [key: string]: boolean };
+  policy_ids: { [key: string]: boolean };
+  key: string;
+  name: string;
 }
 ```
 
