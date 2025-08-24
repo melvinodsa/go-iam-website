@@ -1,11 +1,20 @@
 import { notFound } from "next/navigation";
-import { getPages, getAdjacentPages } from "@/app/utils/utils";
+import { getPages, getAdjacentPages, Post } from "@/app/utils/utils";
 import { formatDate } from "@/app/utils/formatDate";
 import { Column, Heading, Icon, Row, Media, Text, Card, HeadingNav, Meta, Schema, Button } from "@once-ui-system/core";
 import { baseURL, layout, schema } from "@/resources/once-ui.config";
 import { CustomMDX } from "@/components/mdx";
 import { Metadata } from "next";
 import React from "react";
+
+
+export async function generateStaticParams() {
+  const docs = await getPages();
+
+  return docs.map((doc) => ({
+    slug: doc.slug.split('/'),
+  }));
+}
 
 export async function generateMetadata({
   params,
@@ -27,7 +36,7 @@ export async function generateMetadata({
     path: `/${doc.slug}`,
     type: "article",
     publishedTime: doc.metadata.updatedAt,
-    image: doc.metadata.image || `/api/og/generate?title=${encodeURIComponent(doc.metadata.title)}&description=${encodeURIComponent(doc.metadata.summary)}`,
+    image: doc.metadata.image,
   });
 }
 
@@ -35,7 +44,7 @@ export default async function Docs({
   params,
 }: { params: Promise<{ slug: string[] }> }) {
   const routeParams = await params;
-  const slugPath = routeParams.slug.join('/');
+  const slugPath = routeParams.slug ? routeParams.slug.join('/') : '';
 
   let doc = getPages().find((doc) => doc.slug === slugPath);
 
@@ -50,7 +59,7 @@ export default async function Docs({
     ? "Docs"
     : routeParams.slug[0]
       ?.split('-')
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .map((word: string) => word.charAt(0).toUpperCase() + word.slice(1))
       .join(' ');
 
   return (

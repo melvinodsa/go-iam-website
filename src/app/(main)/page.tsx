@@ -17,12 +17,15 @@ import {
 import { social } from "@/resources/once-ui.config";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { DataContext } from "./data";
+import { useContext } from "react";
 
 export default function Home() {
+  const { navigationItems } = useContext(DataContext);
   return (
     <Column fillWidth style={{ minHeight: "100vh" }}>
       {/* Navigation */}
-      <Navbar />
+      <Navbar navigationItems={navigationItems} />
 
       {/* Hero Section */}
       <Column

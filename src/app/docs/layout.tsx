@@ -11,6 +11,7 @@ import { Providers } from '@/components/Providers';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { Sidebar } from '@/components/Sidebar';
+import getNavigation from '../utils/getNavigation';
 
 export async function generateMetadata() {
   return Meta.generate({
@@ -30,6 +31,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const navigationItems = getNavigation();
   return (
     <Flex
       suppressHydrationWarning
@@ -113,7 +115,7 @@ export default function RootLayout({
       </head>
       <Providers>
         <Column as="body" background="page" fillWidth margin="0" padding="0">
-          <Navbar />
+          <Navbar navigationItems={navigationItems} />
           <Row marginTop="64" style={{ height: "calc(100vh - var(--static-space-64) - var(--static-space-12) - (var(--responsive-space-m)*3))" }} horizontal="start">
             <Sidebar
               maxWidth={100}
@@ -123,6 +125,7 @@ export default function RootLayout({
               s={{ style: { marginLeft: '0' } }}
               top="64"
               zIndex={9}
+              initialNavigation={navigationItems}
             />
             {children}
           </Row>

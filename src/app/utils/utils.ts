@@ -3,7 +3,7 @@ import path from "path";
 import matter from "gray-matter";
 import { Schemes } from "@once-ui-system/core";
 
-interface Post {
+export interface Post {
   slug: string;
   content: string;
   navTag?: string;
@@ -51,7 +51,10 @@ export function getPages(customPath = ["src", "content"], order = 1): Post[] {
     if (stat.isDirectory()) {
       try {
         const dirOrder = metaData.pages?.[file] || order;
-        posts.push(...getPages([...customPath, file], dirOrder));
+        const subPages = getPages([...customPath, file], dirOrder);
+        if (Array.isArray(subPages)) {
+          posts.push(...subPages);
+        }
       } catch (error) {
         console.warn(`Error reading directory: ${filePath}`, error);
       }
@@ -95,7 +98,6 @@ export function getPages(customPath = ["src", "content"], order = 1): Post[] {
   const sortedPosts = posts.sort((a, b) => {
     return (a.metadata.order || 0) - (b.metadata.order || 0);
   });
-  console.log(customPath, sortedPosts.map(post => ({ order: post.metadata.order, name: post.metadata.title })));
 
   return sortedPosts;
 }

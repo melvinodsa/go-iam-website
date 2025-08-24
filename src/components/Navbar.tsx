@@ -4,9 +4,9 @@ import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
 import { Button, Fade, Flex, Logo, NavIcon, Row, Kbar, useTheme } from "@once-ui-system/core";
 import { layout, routes, social } from "@/resources/once-ui.config";
-import { Sidebar, NavigationItem } from "./Sidebar";
+import { NavigationItem } from "./Sidebar";
 
-function Navbar() {
+function Navbar({ navigationItems }: { navigationItems: NavigationItem[] }) {
     const [isMac, setIsMac] = useState(false);
     const pathname = usePathname();
     const isDocsPage = pathname.startsWith('/docs');
@@ -15,16 +15,6 @@ function Navbar() {
         setIsMac(navigator.userAgent.toLowerCase().indexOf('mac') !== -1);
     }, []);
 
-    const [navigationItems, setNavigationItems] = useState<NavigationItem[]>([]);
-
-    useEffect(() => {
-        fetch("/api/navigation")
-            .then((res) => res.json())
-            .then((data) => {
-                setNavigationItems(data);
-            })
-            .catch((err) => console.error("Navigation fetch failed", err));
-    }, []);
 
     // Function to convert navigation items to Kbar items recursively
     const convertToKbarItems = (items: NavigationItem[]) => {
@@ -165,7 +155,6 @@ function Navbar() {
         </>
     );
 };
-
 
 
 export default Navbar;

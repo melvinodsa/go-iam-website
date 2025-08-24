@@ -26,7 +26,7 @@ export interface NavigationItem extends Omit<React.ComponentProps<typeof Flex>, 
 }
 
 interface SidebarProps extends Omit<React.ComponentProps<typeof Flex>, "children"> {
-  initialNavigation?: NavigationItem[];
+  initialNavigation: NavigationItem[];
 }
 
 // Memoized navigation item component to prevent re-renders
@@ -349,21 +349,6 @@ const Sidebar: React.FC<SidebarProps> = ({ initialNavigation, ...rest }) => {
       setNavigation(globalNavigationCache);
       setHasLoaded(true);
       return;
-    }
-
-    // Fetch only if not loaded and no global cache
-    if (!hasLoaded) {
-      fetch("/api/navigation")
-        .then((res) => res.json())
-        .then((data) => {
-          setNavigation(data);
-          globalNavigationCache = data; // Cache globally
-          setHasLoaded(true);
-        })
-        .catch((err) => {
-          console.error("Navigation fetch failed", err);
-          setHasLoaded(true);
-        });
     }
   }, [initialNavigation, hasLoaded]);
 
