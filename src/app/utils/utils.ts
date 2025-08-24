@@ -20,7 +20,7 @@ interface Post {
   };
 }
 
-export function getPages(customPath = ["src", "content"]): Post[] {
+export function getPages(customPath = ["src", "content"], order = 1): Post[] {
   const postsDir = path.join(process.cwd(), ...customPath);
   const contentBasePath = path.join(process.cwd(), "src", "content");
 
@@ -50,7 +50,8 @@ export function getPages(customPath = ["src", "content"]): Post[] {
 
     if (stat.isDirectory()) {
       try {
-        posts.push(...getPages([...customPath, file]));
+        const dirOrder = metaData.pages?.[file] || order;
+        posts.push(...getPages([...customPath, file], dirOrder));
       } catch (error) {
         console.warn(`Error reading directory: ${filePath}`, error);
       }
@@ -66,7 +67,7 @@ export function getPages(customPath = ["src", "content"]): Post[] {
 
         // Get order from meta.json if available
         const fileName = path.basename(file, path.extname(file));
-        const metaOrder = metaData.pages?.[fileName];
+        const metaOrder = (metaData.pages?.[fileName] || 0) + order * 10;
 
         posts.push({
           slug,
@@ -91,7 +92,12 @@ export function getPages(customPath = ["src", "content"]): Post[] {
     }
   });
 
-  return posts;
+  const sortedPosts = posts.sort((a, b) => {
+    return (a.metadata.order || 0) - (b.metadata.order || 0);
+  });
+  console.log(customPath, sortedPosts.map(post => ({ order: post.metadata.order, name: post.metadata.title })));
+
+  return sortedPosts;
 }
 
 // Sort types for documentation pages
@@ -172,262 +178,15 @@ export function getAdjacentPages(currentSlug: string, sortType: SortType = 'sect
     // Get all pages
     const allPages = getPages();
 
-    // First, create a flattened array that represents the exact order of the sidebar
-    const sidebarOrderedPages: Post[] = [];
-
-    // Read root meta.json for section ordering
-    let rootMetaData: { pages?: Record<string, number> } = {};
-    const rootMetaPath = path.join(process.cwd(), "src", "content", "meta.json");
-    if (fs.existsSync(rootMetaPath)) {
-      try {
-        rootMetaData = JSON.parse(fs.readFileSync(rootMetaPath, 'utf8'));
-      } catch (error) {
-        console.warn(`Error reading root meta.json: ${rootMetaPath}`, error);
-      }
-    }
-
-    // Handle top-level pages first (pages without a section)
-    const topLevelPages = allPages.filter(page => !page.slug.includes('/'));
-
-    // Sort top-level pages based on meta.json order
-    const sortedTopLevelPages = topLevelPages.sort((a, b) => {
-      const aOrder = rootMetaData.pages?.[a.slug];
-      const bOrder = rootMetaData.pages?.[b.slug];
-
-      if (aOrder !== undefined && bOrder !== undefined) {
-        return aOrder - bOrder;
-      }
-      if (aOrder !== undefined) return -1;
-      if (bOrder !== undefined) return 1;
-
-      // Fallback to alphabetical by title
-      return a.metadata.title.localeCompare(b.metadata.title);
-    });
-
-    // Add top-level pages to the ordered list
-    sortedTopLevelPages.forEach(page => {
-      sidebarOrderedPages.push(page);
-    });
-
-    // Group pages by their main section (first part of the path)
-    const sectionMap = new Map<string, Post[]>();
-
-    allPages.forEach(page => {
-      if (page.slug.includes('/')) {
-        const section = page.slug.split('/')[0];
-        if (!sectionMap.has(section)) {
-          sectionMap.set(section, []);
-        }
-        sectionMap.get(section)!.push(page);
-      }
-    });
-
-    // Get sections and sort them based on meta.json if available
-    const sections = Array.from(sectionMap.entries()).map(([section, pages]) => ({ section, pages }));
-
-    const sortedSections = [...sections].sort((a, b) => {
-      const aOrder = rootMetaData.pages?.[a.section];
-      const bOrder = rootMetaData.pages?.[b.section];
-
-      if (aOrder !== undefined && bOrder !== undefined) {
-        return aOrder - bOrder;
-      }
-      if (aOrder !== undefined) return -1;
-      if (bOrder !== undefined) return 1;
-
-      // Fallback to alphabetical
-      return a.section.localeCompare(b.section);
-    });
-
-    // Process each section and add its pages to the ordered list
-    sortedSections.forEach(({ section, pages }) => {
-      // Try to read section meta.json for page ordering within the section
-      let sectionMetaData: { pages?: Record<string, number>, order?: number, folders?: Record<string, number> } = {};
-      const sectionMetaPath = path.join(process.cwd(), "src", "content", section, "meta.json");
-
-      if (fs.existsSync(sectionMetaPath)) {
-        try {
-          sectionMetaData = JSON.parse(fs.readFileSync(sectionMetaPath, 'utf8'));
-        } catch (error) {
-          console.warn(`Error reading section meta.json: ${sectionMetaPath}`, error);
-        }
-      }
-
-      // Group pages by subfolder within the section
-      const folderMap = new Map<string, Post[]>();
-
-      // First, identify all direct children of the section (no additional slashes)
-      const directChildren = pages.filter(page => {
-        const pathParts = page.slug.split('/');
-        return pathParts.length === 2; // section/page.mdx format
-      });
-
-      // Add direct children to the folder map under an empty key
-      if (directChildren.length > 0) {
-        folderMap.set('', directChildren);
-      }
-
-      // Then group the nested pages by their immediate subfolder
-      pages.forEach(page => {
-        const pathParts = page.slug.split('/');
-        if (pathParts.length > 2) { // It's in a subfolder
-          const folder = pathParts[1]; // Get the subfolder name
-          if (!folderMap.has(folder)) {
-            folderMap.set(folder, []);
-          }
-          folderMap.get(folder)!.push(page);
-        }
-      });
-
-      // Sort the folders based on meta.json if available
-      const folders = Array.from(folderMap.entries()).map(([folder, folderPages]) => ({ folder, pages: folderPages }));
-
-      const sortedFolders = [...folders].sort((a, b) => {
-        // Empty folder (direct children) always comes first
-        if (a.folder === '') return -1;
-        if (b.folder === '') return 1;
-
-        // Check if folders have order in section meta.json
-        const aOrder = sectionMetaData.folders?.[a.folder];
-        const bOrder = sectionMetaData.folders?.[b.folder];
-
-        if (aOrder !== undefined && bOrder !== undefined) {
-          return aOrder - bOrder;
-        }
-        if (aOrder !== undefined) return -1;
-        if (bOrder !== undefined) return 1;
-
-        // Fallback to alphabetical by folder name
-        return a.folder.localeCompare(b.folder);
-      });
-
-      // Process each folder and add its pages to the ordered list
-      sortedFolders.forEach(({ folder, pages: folderPages }) => {
-        // Sort pages within the folder
-        const sortedFolderPages = [...folderPages].sort((a, b) => {
-          // Extract page name from slug (last part after the slash)
-          const aName = a.slug.split('/').pop()!;
-          const bName = b.slug.split('/').pop()!;
-
-          // For direct children, check if pages have order in section meta.json
-          if (folder === '') {
-            const aOrder = sectionMetaData.pages?.[aName];
-            const bOrder = sectionMetaData.pages?.[bName];
-
-            if (aOrder !== undefined && bOrder !== undefined) {
-              return aOrder - bOrder;
-            }
-            if (aOrder !== undefined) return -1;
-            if (bOrder !== undefined) return 1;
-          }
-
-          // Try to read folder meta.json for nested pages
-          if (folder !== '') {
-            let folderMetaData: { pages?: Record<string, number> } = {};
-            const folderMetaPath = path.join(process.cwd(), "src", "content", section, folder, "meta.json");
-
-            if (fs.existsSync(folderMetaPath)) {
-              try {
-                folderMetaData = JSON.parse(fs.readFileSync(folderMetaPath, 'utf8'));
-
-                const aOrder = folderMetaData.pages?.[aName];
-                const bOrder = folderMetaData.pages?.[bName];
-
-                if (aOrder !== undefined && bOrder !== undefined) {
-                  return aOrder - bOrder;
-                }
-                if (aOrder !== undefined) return -1;
-                if (bOrder !== undefined) return 1;
-              } catch (error) {
-                console.warn(`Error reading folder meta.json: ${folderMetaPath}`, error);
-              }
-            }
-          }
-
-          // If no explicit order, check if pages have order in their frontmatter
-          if (a.metadata.order !== undefined && b.metadata.order !== undefined) {
-            return a.metadata.order - b.metadata.order;
-          }
-          if (a.metadata.order !== undefined) return -1;
-          if (b.metadata.order !== undefined) return 1;
-
-          // Fallback to alphabetical by title
-          return a.metadata.title.localeCompare(b.metadata.title);
-        });
-
-        // Add sorted folder pages to the ordered list
-        sortedFolderPages.forEach(page => {
-          sidebarOrderedPages.push(page);
-        });
-      });
-    });
-
-    // Find current page index in the flattened sidebar order
-    const currentIndex = sidebarOrderedPages.findIndex(page => page.slug === currentSlug);
-
+    // Find the current page
+    const currentIndex = allPages.findIndex(page => page.slug === currentSlug);
     if (currentIndex === -1) {
       return { prevPage: null, nextPage: null };
     }
 
     // Get previous and next pages based on the sidebar order
-    let prevPage = currentIndex > 0 ? sidebarOrderedPages[currentIndex - 1] : null;
-    let nextPage = currentIndex < sidebarOrderedPages.length - 1 ? sidebarOrderedPages[currentIndex + 1] : null;
-
-    // Check if current page is in a section or nested folder
-    if (currentSlug.includes('/')) {
-      const currentParts = currentSlug.split('/');
-      const currentSection = currentParts[0];
-
-      // Handle previous page navigation
-      if (prevPage) {
-        if (!prevPage.slug.includes('/')) {
-          // If previous page is a top-level page, set it to null
-          prevPage = null;
-        } else {
-          const prevParts = prevPage.slug.split('/');
-          const prevSection = prevParts[0];
-
-          // If previous page is from a different section, set it to null
-          if (prevSection !== currentSection) {
-            prevPage = null;
-          } else if (currentParts.length > 2 && prevParts.length > 2) {
-            // If both are in nested folders, check if they're in the same folder
-            if (currentParts[1] !== prevParts[1]) {
-              // If they're in different folders within the same section, set prevPage to null
-              prevPage = null;
-            }
-          } else if (currentParts.length > 2 && prevParts.length === 2) {
-            // If current page is in a nested folder but prev is direct child of section
-            prevPage = null;
-          }
-        }
-      }
-
-      // Handle next page navigation
-      if (nextPage) {
-        if (!nextPage.slug.includes('/')) {
-          // If next page is a top-level page (shouldn't happen normally), set it to null
-          nextPage = null;
-        } else {
-          const nextParts = nextPage.slug.split('/');
-          const nextSection = nextParts[0];
-
-          // If next page is from a different section, set it to null
-          if (nextSection !== currentSection) {
-            nextPage = null;
-          } else if (currentParts.length > 2 && nextParts.length > 2) {
-            // If both are in nested folders, check if they're in the same folder
-            if (currentParts[1] !== nextParts[1]) {
-              // If they're in different folders within the same section, set nextPage to null
-              nextPage = null;
-            }
-          } else if (currentParts.length === 2 && nextParts.length > 2) {
-            // If current page is direct child of section but next is in a nested folder
-            nextPage = null;
-          }
-        }
-      }
-    }
+    let prevPage = currentIndex > 0 ? allPages[currentIndex - 1] : null;
+    let nextPage = currentIndex < allPages.length - 1 ? allPages[currentIndex + 1] : null;
 
     return { prevPage, nextPage };
   } catch (error) {
