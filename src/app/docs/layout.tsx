@@ -1,6 +1,7 @@
 import '@once-ui-system/core/css/styles.css';
 import '@once-ui-system/core/css/tokens.css';
 import '@/resources/custom.css'
+import { Analytics } from "@vercel/analytics/next"
 import React from "react";
 
 import classNames from "classnames";
@@ -46,6 +47,7 @@ export default function RootLayout({
         fonts.code.variable,
       )}
     >
+      <Analytics />
       <Schema
         as="webPage"
         baseURL={baseURL}
