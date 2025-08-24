@@ -2,6 +2,7 @@ import '@once-ui-system/core/css/styles.css';
 import '@once-ui-system/core/css/tokens.css';
 import '@/resources/custom.css'
 import { Analytics } from "@vercel/analytics/next"
+import { SpeedInsights } from "@vercel/speed-insights/next"
 import React from "react";
 
 import classNames from "classnames";
@@ -48,6 +49,7 @@ export default function RootLayout({
       )}
     >
       <Analytics />
+      <SpeedInsights />
       <Schema
         as="webPage"
         baseURL={baseURL}
