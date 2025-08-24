@@ -12,18 +12,22 @@ import {
   FaPython,
   FaReact,
   FaRust,
+  FaLaptopCode,
 } from "react-icons/fa";
 
 import {
-  GoServer
+  GoServer,
+  GoZap,
 } from "react-icons/go";
 
 import { GiTrafficLightsReadyToGo } from "react-icons/gi";
 
 import { TbSdk } from "react-icons/tb";
 import { GrUserAdmin } from "react-icons/gr";
-import { FaGolang } from "react-icons/fa6";
+import { FaGolang, FaShieldHalved } from "react-icons/fa6";
 import { SiTypescript } from "react-icons/si";
+import { IoLayers } from "react-icons/io5";
+import { FcDeployment } from "react-icons/fc";
 
 
 export const iconLibrary: Record<string, IconType> = {
@@ -41,6 +45,11 @@ export const iconLibrary: Record<string, IconType> = {
   typescript: SiTypescript,
   react: FaReact,
   rust: FaRust,
+  shield: FaShieldHalved,
+  code: FaLaptopCode,
+  zap: GoZap,
+  layers: IoLayers,
+  deployment: FcDeployment,
 };
 
 

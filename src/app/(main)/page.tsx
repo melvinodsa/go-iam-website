@@ -197,7 +197,7 @@ export default function Home() {
               radius="l"
               border="neutral-alpha-weak"
             >
-              <Icon name="box" size="l" onBackground="brand-strong" />
+              <Icon name="deployment" size="l" onBackground="brand-strong" />
               <Heading variant="heading-strong-l">Easy Deployment</Heading>
               <Text onBackground="neutral-weak">
                 Single binary deployment, Docker support, and cloud-native design.
@@ -247,16 +247,6 @@ export default function Home() {
               size="l"
             >
               Read Documentation
-            </Button>
-            <Button
-              href={social.github}
-              variant="secondary"
-              data-border="rounded"
-              prefixIcon="download"
-              size="l"
-              target="_blank"
-            >
-              Download Now
             </Button>
           </Row>
         </Column>
