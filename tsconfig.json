@@ -23,6 +23,6 @@
     },
     "target": "ES2017"
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/app/(main)/page.tsx_new", "src/app/(main)/layout.tsx_new", "src/app/(main)/layout.tsx_old", "src/app/(main)/page.tsx_old"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/app/(main)/page.tsx_new", "src/app/(main)/layout.tsx_new", "src/app/(main)/layout.tsx_old", "src/app/(main)/page.tsx_old", "src/app/api-spec/layout.tsx"],
   "exclude": ["node_modules"]
 }

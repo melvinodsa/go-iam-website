@@ -28,6 +28,7 @@ import { FaGolang, FaShieldHalved } from "react-icons/fa6";
 import { SiTypescript } from "react-icons/si";
 import { IoLayers } from "react-icons/io5";
 import { FcDeployment } from "react-icons/fc";
+import { TbApi } from "react-icons/tb";
 
 
 export const iconLibrary: Record<string, IconType> = {
@@ -50,6 +51,7 @@ export const iconLibrary: Record<string, IconType> = {
   zap: GoZap,
   layers: IoLayers,
   deployment: FcDeployment,
+  api: TbApi,
 };
 
 

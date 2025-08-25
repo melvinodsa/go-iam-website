@@ -271,6 +271,12 @@ const SidebarContent: React.FC<{
         />
       )} */}
       <ResourceLink
+        href="/api-spec"
+        icon="api"
+        label="API Docs"
+        pathname={"go-iam-api-docs"}
+      />
+      <ResourceLink
         href="https://github.com/melvinodsa/go-iam-ui"
         icon="admin"
         label="Admin UI"
