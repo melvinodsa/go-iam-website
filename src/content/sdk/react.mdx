@@ -17,69 +17,50 @@ navIcon: "react"
     <img src="https://img.shields.io/npm/dm/@goiam/react.svg" alt="npm downloads" />
   </a>
 </div>
+
+A React SDK for integrating with Go-IAM (Identity and Access Management) server. This package provides React hooks and utilities for handling authentication in your React applications using [Hookstate](https://hookstate.js.org/) for optimal performance and minimal re-renders.
+
 ## Installation
 
 ```bash
 npm install @goiam/react
-# or
+```
+
+or
+
+```bash
 yarn add @goiam/react
 ```
 
 ## Features
 
 - 🔐 **Easy Authentication**: Simple integration with Go-IAM server
-- 🛡️ **Auth Guard Component**: Protect routes and components based on authentication status
-- 🎯 **Role-Based Access Control**: Support for role-based authorization
-- 📦 **React Context Provider**: Centralized authentication state management
-- 🪝 **Custom Hooks**: Easy access to authentication state and methods
+- � **High Performance**: Built with Hookstate for minimal re-renders
+- 🎯 **Resource-Based Access Control**: Support for resource-based authorization
+- 🪝 **Simple Hook API**: Easy access to authentication state and methods
 - 💾 **Persistent Storage**: Automatic user data storage and retrieval
-- 🔄 **Auto Refresh**: Automatic user profile updates
+- 🔄 **Auto Refresh**: Automatic user profile updates with smart caching
 - 📱 **TypeScript Support**: Full TypeScript support with comprehensive types
+- ⚡ **PKCE Support**: Secure OAuth2 PKCE flow implementation
 
 ## Quick Start
 
-### 1. Setup the Provider
+### 1. Basic Setup
 
-Wrap your application with the `GoIamProvider`:
-
-```tsx
-import React from 'react';
-import { GoIamProvider, createGoIamConfig } from '@goiam/react';
-import App from './App';
-
-const config = createGoIamConfig({
-  baseUrl: 'https://your-goiam-server.com',
-  clientId: 'your-client-id',
-  redirectUrl: 'https://your-app.com/callback',
-});
-
-function Root() {
-  return (
-    <GoIamProvider config={config}>
-      <App />
-    </GoIamProvider>
-  );
-}
-
-export default Root;
-```
-
-### 2. Use the Auth Hook
-
-Access authentication state and methods:
+No provider needed! Just start using the hook:
 
 ```tsx
 import React from 'react';
 import { useGoIam } from '@goiam/react';
 
 function LoginButton() {
-  const { isAuthenticated, user, login, logout, isLoading } = useGoIam();
+  const { user, login, logout, loadedState } = useGoIam();
 
-  if (isLoading) {
+  if (!loadedState) {
     return <div>Loading...</div>;
   }
 
-  if (isAuthenticated && user) {
+  if (user) {
     return (
       <div>
         <p>Welcome, {user.name || user.email}!</p>
@@ -92,279 +73,352 @@ function LoginButton() {
 }
 ```
 
-### 3. Verify Auth callback
+### 2. Configure Your App
 
+Set up the base URL and client ID:
 
+```tsx
+import React, { useEffect } from 'react';
+import { useGoIam } from '@goiam/react';
 
-### 4. Protect Routes with Auth Guard
+function App() {
+  const { setBaseUrl, setClientId, dashboardMe } = useGoIam();
 
-Use the `AuthGuard` component to protect routes:
+  useEffect(() => {
+    // Configure the SDK
+    setBaseUrl('https://your-goiam-server.com');
+    setClientId('your-client-id');
+
+    // Load user data on app start
+    dashboardMe();
+  }, [setBaseUrl, setClientId, dashboardMe]);
+
+  return <div>Your App Content</div>;
+}
+```
+
+### 3. Handle Authentication Callback
+
+Complete authentication after redirect from GoIAM server:
+
+```tsx
+import React, { useEffect } from 'react';
+import { useGoIam } from '@goiam/react';
+
+function CallbackScreen() {
+  const { user, verify, loadedState, verifying } = useGoIam();
+
+  useEffect(() => {
+    // Extract parameters from URL query string
+    const urlParams = new URLSearchParams(window.location.search);
+    const code = urlParams.get('code');
+    const codeChallenge = localStorage.getItem('code_challenge'); // Stored during login
+
+    if (code && codeChallenge && !user && !verifying) {
+      // Complete authentication
+      verify(codeChallenge, code);
+    }
+  }, [verify, user, verifying]);
+
+  if (verifying) {
+    return <div>Completing authentication...</div>;
+  }
+
+  if (!loadedState) {
+    return <div>Loading...</div>;
+  }
+
+  if (user) {
+    return (
+      <div>
+        <p>Welcome back, {user.name || user.email}!</p>
+        <a href="/">Go to Dashboard</a>
+      </div>
+    );
+  }
+
+  return <div>Authentication failed. Please try again.</div>;
+}
+```
+
+### 4. Resource-Based Access Control
+
+Check user permissions:
+
+```tsx
+import React from 'react';
+import { useGoIam } from '@goiam/react';
+
+function AdminPanel() {
+  const { user, hasRequiredResources } = useGoIam();
+
+  if (!user) {
+    return <div>Please log in to access this area.</div>;
+  }
+
+  if (!hasRequiredResources(['admin', 'user_management'])) {
+    return <div>You don't have permission to access this area.</div>;
+  }
+
+  return (
+    <div>
+      <h2>Admin Panel</h2>
+      <p>Welcome to the admin area!</p>
+    </div>
+  );
+}
+```
+
+### 5. Using AuthGuard for Route Protection
+
+Protect your routes with the AuthGuard component:
 
 ```tsx
 import React from 'react';
 import { AuthGuard } from '@goiam/react';
-import Dashboard from './Dashboard';
 
-function ProtectedDashboard() {
+// Basic route protection
+function ProtectedRoute() {
   return (
     <AuthGuard>
-      <Dashboard />
+      <div>This content is only visible to authenticated users!</div>
     </AuthGuard>
   );
 }
 
-// With automatic redirect to login
-function AutoRedirectDashboard() {
+// Auto-redirect to login
+function AutoRedirectRoute() {
   return (
     <AuthGuard redirectToLogin={true}>
-      <Dashboard />
+      <div>Protected content with auto redirect</div>
     </AuthGuard>
   );
 }
 
-// With role-based access control
-function AdminDashboard() {
+// Resource-based protection
+function AdminRoute() {
   return (
-    <AuthGuard requiredRoles={['admin']}>
-      <Dashboard />
+    <AuthGuard requiredResources={['admin']}>
+      <div>Admin-only content</div>
+    </AuthGuard>
+  );
+}
+
+// Custom fallback components
+function CustomFallbackRoute() {
+  const CustomLogin = () => (
+    <div style={{ textAlign: 'center', padding: '2rem' }}>
+      <h3>🔒 Login Required</h3>
+      <p>Please sign in to continue</p>
+    </div>
+  );
+
+  const CustomUnauthorized = () => (
+    <div style={{ textAlign: 'center', padding: '2rem' }}>
+      <h3>⛔ Access Denied</h3>
+      <p>You need admin permissions</p>
+    </div>
+  );
+
+  return (
+    <AuthGuard
+      requiredResources={['admin']}
+      fallback={CustomLogin}
+      unauthorizedComponent={CustomUnauthorized}
+    >
+      <div>Protected admin content</div>
     </AuthGuard>
   );
 }
 ```
+
+#### Using the withAuthGuard HOC
+
+For component-based protection:
+
+```tsx
+import React from 'react';
+import { withAuthGuard } from '@goiam/react';
+
+// Basic component protection
+const ProtectedComponent = () => <div>This component is protected!</div>;
+
+export const GuardedComponent = withAuthGuard(ProtectedComponent);
+
+// With guard options
+const AdminComponent = () => <div>Admin dashboard content</div>;
+
+export const GuardedAdminComponent = withAuthGuard(AdminComponent, {
+  requiredResources: ['admin'],
+  redirectToLogin: true,
+});
+
+// Usage in your app
+function App() {
+  return (
+    <div>
+      <GuardedComponent />
+      <GuardedAdminComponent />
+    </div>
+  );
+}
+```
+
+#### AuthGuard Props
+
+<Table
+  data={{
+    headers: [
+      { content: "Prop", key: "prop", sortable: true },
+      { content: "Type", key: "type", sortable: true },
+      { content: "Default", key: "default", sortable: true },
+      { content: "Description", key: "description", sortable: true },
+    ],
+    rows: [
+      [
+        "`children`",
+        "`ReactNode`",
+        "-",
+        "Content to render when authenticated and authorized"
+      ],
+      [
+        "`fallback`",
+        "`ComponentType`",
+        "`DefaultUnauthenticatedComponent`",
+        "Component to show when user is not authenticated"
+      ],
+      [
+        "`redirectToLogin`",
+        "`boolean`",
+        "`false`",
+        "Automatically redirect to login page if not authenticated"
+      ],
+      [
+        "`requiredResources`",
+        "`string[]`",
+        "`[]`",
+        "Array of required resource permissions"
+      ],
+      [
+        "`unauthorizedComponent`",
+        "`ComponentType`",
+        "`DefaultUnauthorizedComponent`",
+        "Component to show when user lacks required resources"
+      ]
+    ]
+  }}
+/>
 
 ## API Reference
 
-### GoIamProvider
-
-The main provider component that manages authentication state.
-
-#### Props
-
-<Table
-  data={{
-    headers: [
-      { content: "Prop", key: "prop"},
-      { content: "Type", key: "type" },
-      { content: "Required", key: "required" },
-      { content: "Description", key: "description" },
-    ],
-    rows: [
-      ["`config`", "`GoIamConfig`", "Yes", "Configuration object for GoIAM"],
-      ["`children`", "`ReactNode`", "Yes", "Child components"],
-      ["`loadingComponent`", "`ComponentType`", "No", "Custom loading component"],
-    ],
-  }}
-/>
-
-#### GoIamConfig
-
-```tsx
-interface GoIamConfig {
-  baseUrl: string; // GoIAM server base URL
-  clientId: string; // Your client ID
-  redirectUrl: string; // Callback URL after authentication
-  storageKey?: string; // Storage key for user data (default: 'goiam_user')
-  timeout?: number; // API timeout in milliseconds (default: 10000)
-}
-```
-
 ### useGoIam Hook
 
-Custom hook to access authentication state and methods.
+The main hook to access authentication state and methods. Built with Hookstate for optimal performance.
 
 ```tsx
 const {
-  isAuthenticated, // boolean: Whether user is authenticated
-  isLoading, // boolean: Whether auth state is being determined
-  user, // User | null: Current user data
-  error, // string | null: Any authentication error
+  // State
+  user, // User | undefined: Current user data
+  loadedState, // boolean: Whether initial data load is complete
+  clientAvailable, // boolean: Whether client is properly configured
+  verifying, // boolean: Whether verification is in progress
+  loadingMe, // boolean: Whether user data is being fetched
+  verified, // boolean: Whether user has verified their account
+  err, // string: Any error message
+  baseUrl, // string: Current base URL
+  clientId, // string: Current client ID
+  loginPageUrl, // string: Login page URL
+  callbackPageUrl, // string: Callback page URL
+
+  // Actions
   login, // () => void: Redirect to login
   logout, // () => void: Clear user data and logout
-  refreshUser, // () => Promise<void>: Refresh user data from API
-  config, // GoIamConfig: Current configuration
+  verify, // (codeChallenge: string, code: string) => Promise<void>: Complete authentication
+  dashboardMe, // (dontUpdateTime?: boolean) => Promise<void>: Fetch user dashboard data
+  me, // () => Promise<void>: Fetch user profile
+  hasRequiredResources, // (resources: string[]) => boolean: Check user permissions
+
+  // Configuration
+  setBaseUrl, // (url: string) => void: Set API base URL
+  setClientId, // (id: string) => void: Set client ID
+  setLoginPageUrl, // (url: string) => void: Set login page URL
+  setCallbackPageUrl, // (url: string) => void: Set callback page URL
+  setLoadingMe, // (loading: boolean) => void: Set loading state
 } = useGoIam();
 ```
 
-### AuthGuard Component
+### Key Methods
 
-Component to protect routes based on authentication and roles.
+#### dashboardMe(dontUpdateTime?: boolean)
 
-#### Props
-
-<Table
-  data={{
-    headers: [
-      { content: "Prop", key: "prop"},
-      { content: "Type", key: "type" },
-      { content: "Required", key: "required" },
-      { content: "Description", key: "description" },
-    ],
-    rows: [
-      ["`children`", "`ReactNode`", "Yes", "Components to render when authorized"],
-      ["`fallback`", "`ComponentType`", "No", "Component for unauthenticated users"],
-      ["`redirectToLogin`", "`boolean`", "No", "Auto-redirect to login (default: false)"],
-      ["`requiredRoles`", "`string[]`", "No", "Required roles for access"],
-      ["`unauthorizedComponent`", "`ComponentType`", "No", "Component for unauthorized users"],
-    ],
-  }}
-/>
-
-#### Example Usage
+Fetches user dashboard data including setup information and user profile. Includes smart caching - skips API call if data was fetched recently (within 5 minutes) unless `dontUpdateTime` is true.
 
 ```tsx
-// Basic protection
-<AuthGuard>
-  <ProtectedContent />
-</AuthGuard>
+// Standard fetch with caching
+await dashboardMe();
 
-// With custom fallback
-<AuthGuard fallback={CustomLoginComponent}>
-  <ProtectedContent />
-</AuthGuard>
-
-// With role-based access
-<AuthGuard
-  requiredRoles={['admin', 'moderator']}
-  unauthorizedComponent={AccessDenied}
->
-  <AdminPanel />
-</AuthGuard>
-
-// Auto-redirect to login
-<AuthGuard redirectToLogin={true}>
-  <Dashboard />
-</AuthGuard>
+// Force fetch, bypass cache
+await dashboardMe(true);
 ```
 
-### withAuthGuard HOC
+#### verify(codeChallenge: string, code: string)
 
-Higher-order component version of AuthGuard:
+Completes the OAuth2 PKCE authentication flow with the authorization code and code challenge.
 
 ```tsx
-import { withAuthGuard } from '@goiam/react';
-
-const ProtectedComponent = withAuthGuard(MyComponent, {
-  requiredRoles: ['admin'],
-  redirectToLogin: true,
-});
+const codeChallenge = localStorage.getItem('code_challenge');
+const code = new URLSearchParams(window.location.search).get('code');
+await verify(codeChallenge, code);
 ```
 
-### GoIamClient
+#### hasRequiredResources(resources: string[])
 
-Low-level client for direct API interactions:
+Checks if the current user has all the specified resources/permissions.
 
 ```tsx
-import { GoIamClient } from '@goiam/react';
+// Check single resource
+const canAdmin = hasRequiredResources(['admin']);
 
-const client = new GoIamClient(config);
-
-// Get authentication URL
-const authUrl = client.getAuthUrl();
-
-// Fetch user profile
-const user = await client.fetchUserProfile();
-
-// Storage operations
-client.storeUser(user);
-const storedUser = client.getStoredUser();
-client.clearStoredUser();
-
-// Check roles
-const hasAccess = client.hasRequiredRoles(user, ['admin']);
+// Check multiple resources (user must have ALL)
+const canManageUsers = hasRequiredResources(['admin', 'user_management']);
 ```
 
-## User Data Structure
+### User Data Structure
 
 ```tsx
-export interface User {
-  /** Unique identifier for the user */
+interface User {
   id: string;
-  /** Unique identifier for the project to which user belongs */
-  project_id: string;
-  /** User's email address */
+  name: string;
   email: string;
-  /** User's display name */
-  name?: string;
-  /** User's phone number */
-  phone?: string;
-  /** Whether the user is enabled */
-  enabled: boolean;
-  /** User's profile picture URL */
-  profile_pic?: string;
-  /** User's account expiry date */
-  expiry?: string;
-  /** User's roles */
-  roles: Record<string, UserRole>;
-  /** User's resources */
-  resources: Record<string, UserResource>;
-  /** User's policies */
-  policies: Record<string, UserPolicy>;
-  /** User's creation timestamp */
-  created_at?: string;
-  /** User's creator */
+  profile_pic: string;
+  created_at: string;
+  updated_at: string;
   created_by: string;
-  /** User's last updated timestamp */
-  updated_at?: string;
-  /** User's last updater */
   updated_by: string;
+  enabled: boolean;
+  expiry: string;
+  resources: Record<string, Resource>; // Resource permissions
+  roles: Record<string, Role>; // User roles
+}
+
+interface Resource {
+  id: string;
+  key: string;
+  name: string;
+}
+
+interface Role {
+  id: string;
+  name: string;
 }
 ```
 
 ## Authentication Flow
 
-1. **Initialization**: Provider checks for stored user data and validates with API
-2. **Login**: User clicks login button → redirects to GoIAM auth URL
-3. **Callback**: After successful authentication, user returns to your app
-4. **Profile Fetch**: SDK automatically fetches and stores user profile
-5. **State Management**: Authentication state is maintained across app
-
-## Error Handling
-
-The SDK provides comprehensive error handling:
-
-```tsx
-function MyComponent() {
-  const { error, isLoading } = useGoIam();
-
-  if (error) {
-    return <div>Authentication error: {error}</div>;
-  }
-
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
-  // Render authenticated content
-}
-```
-
-## Advanced Configuration
-
-### Custom Storage
-
-Provide custom storage implementation:
-
-```tsx
-const customStorage = {
-  getItem: (key: string) => sessionStorage.getItem(key),
-  setItem: (key: string, value: string) => sessionStorage.setItem(key, value),
-  removeItem: (key: string) => sessionStorage.removeItem(key),
-};
-
-const client = new GoIamClient(config, customStorage);
-```
-
-### Custom Loading Component
-
-```tsx
-const CustomLoader = () => (
-  <div className="custom-loader">
-    <spinner />
-    Loading your profile...
-  </div>
-);
-
-<GoIamProvider config={config} loadingComponent={CustomLoader}>
-  <App />
-</GoIamProvider>;
-```
+1. **Initialization**: Hook checks for stored user data and validates with API
+2. **Configuration**: Set base URL and client ID using `setBaseUrl()` and `setClientId()`
+3. **Login**: User clicks login → generates PKCE challenge → redirects to GoIAM auth URL
+4. **Callback**: After successful authentication, user returns to your app with authorization code
+5. **Verification**: Call `verify()` with code challenge and authorization code
+6. **Profile Fetch**: SDK automatically fetches and stores user profile data
+7. **State Management**: Authentication state is maintained globally with Hookstate
