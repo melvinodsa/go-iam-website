@@ -1,0 +1,734 @@
+---
+title: "Backend Integration"
+updatedAt: "2025-09-01"
+summary: "Step-by-step guide to configure your Go IAM client with backend services."
+image: "/images/og/home.png"
+navLabel: "Backend Integration"
+navIcon: "server"
+---
+
+# Quick Start Guide
+
+## Supported languages
+
+### Go
+
+Go is supported by default. The sdk is available as a Go module.
+
+### Python
+<div className="flex gap-2 mb-4">
+  <a href="https://badge.fury.io/py/goiam-python" target="_blank" rel="noopener noreferrer" className="mr-4">
+    <img src="https://badge.fury.io/py/goiam-python.svg" alt="PyPI version" />
+  </a>
+  <a href="https://pypi.org/project/goiam-python/" target="_blank" rel="noopener noreferrer">
+    <img src="https://img.shields.io/pypi/pyversions/goiam-python.svg" alt="Python versions" />
+  </a>
+</div>
+
+### Rust
+<div className="flex gap-2 mb-4">
+  <a href="https://crates.io/crates/goiam" target="_blank" rel="noopener noreferrer" className="mr-4">
+    <img src="https://img.shields.io/crates/v/goiam" alt="Crates.io" />
+  </a>
+  <a href="https://docs.rs/goiam" target="_blank" rel="noopener noreferrer" className="mr-4">
+    <img src="https://docs.rs/goiam/badge.svg" alt="Documentation" />
+  </a>
+  <a href="https://github.com/melvinodsa/go-iam-sdk/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">
+    <img src="https://img.shields.io/crates/l/goiam" alt="License" />
+  </a>
+</div>
+
+### Typescript
+<div className="flex gap-2 mb-4">
+  <a href="https://badge.fury.io/js/@goiam%2Ftypescript" target="_blank" rel="noopener noreferrer" className="mr-4">
+    <img src="https://badge.fury.io/js/@goiam%2Ftypescript.svg" alt="npm version" />
+  </a>
+  <a href="https://www.npmjs.com/package/@goiam/typescript" target="_blank" rel="noopener noreferrer">
+    <img src="https://img.shields.io/npm/dm/@goiam/typescript.svg" alt="npm downloads" />
+  </a>
+</div>
+
+## Step 1: Install the SDK
+
+Choose your language and install the appropriate SDK:
+
+<CodeBlock
+  copyButton={false}
+  codes={[
+    {
+      language: "bash",
+      label: "Go",
+      code:
+`go get github.com/melvinodsa/go-iam-sdk/golang`,
+    },
+      {
+      language: "toml",
+      label: "Rust",
+      code:
+`[dependencies]
+goiam-rust = "0.1.0"
+tokio = { version = "1.0", features = ["full"] }
+`
+    },
+    {
+      language: "bash",
+      label: "Python (pip)",
+      code:
+`pip install goiam-python`
+  },
+    {
+      language: "bash",
+      label: "Python (poetry)",
+      code:
+`poetry add goiam-python`
+  },
+    {
+      language: "bash",
+      label: "Python (pipenv)",
+      code:
+`pipenv install goiam-python`
+  },
+    {
+language: "bash",
+      label: "TypeScript (npm)",
+      code:
+      `npm install @goiam/typescript`
+    },
+    {
+language: "bash",
+      label: "TypeScript (pnpm)",
+      code:
+      `pnpm add @goiam/typescript`
+    },
+    {
+language: "bash",
+      label: "TypeScript (yarn)",
+      code:
+      `yarn add @goiam/typescript`
+    }
+  ]}
+/>
+
+## Step 2: Initialize the SDK
+
+<CodeBlock
+  copyButton={false}
+  codes={[
+    {
+      language: "go",
+      label: "Go",
+      code: `package main
+
+import (
+    "context"
+    "log"
+    goiam "github.com/melvinodsa/go-iam-sdk/golang"
+)
+
+func main() {
+    service := goiam.NewService(
+        "https://your-go-iam-server.com",
+        "your-client-id",
+        "your-client-secret"
+    )
+
+    // Ready to use!
+}
+`,
+    },
+      {
+      language: "rust",
+      label: "Rust",
+      code:`use goiam_rust::{new_service, Service, Resource};
+
+#[tokio::main]
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    // Initialize the service
+    let service = new_service(
+        "https://api.goiam.com".to_string(),
+        "your-client-id".to_string(),
+        "your-secret".to_string()
+    );
+
+    // Rest of the logic
+
+    Ok(())
+}
+`
+    },
+    {
+      language: "python",
+      label: "Python",
+      code:
+`from goiam import new_service
+
+service = new_service(
+    base_url="https://go-iam.example.com",
+    client_id="your-client-id",
+    secret="your-secret"
+)
+`
+  },
+    {
+language: "typescript",
+      label: "TypeScript",
+      code:
+      `import { GoIamSdk } from '@goiam/typescript';
+
+const sdk = new GoIamSdk('https://go-iam.example.com', 'your-client-id', 'your-secret');
+`
+    }
+  ]}
+/>
+
+## Step 3: Implement Authentication
+
+### Verify Authentication Code
+
+<CodeBlock
+  copyButton={false}
+  codes={[
+    {
+      language: "go",
+      label: "Go",
+      code: `ctx := context.Background()
+  token, err := service.Verify(ctx, "auth-code") 
+  if err != nil {
+    log.Fatalf("Failed to verify: %v", err)
+  }
+  fmt.Println("Access Token:", token)}
+`,
+    },
+      {
+      language: "rust",
+      label: "Rust",
+      code:`use goiam_rust::{new_service, Service, Resource};
+
+#[tokio::main]
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    // Initialize the service
+    let service = new_service(
+        "https://api.goiam.com".to_string(),
+        "your-client-id".to_string(),
+        "your-secret".to_string()
+    );
+
+    // Verify a code and get access token
+    match service.verify("authorization-code").await {
+        Ok(token) => {
+            println!("Access Token: {}", token);
+        },
+        Err(e) => eprintln!("Verification failed: {}", e),
+    }
+
+    Ok(())
+}
+`
+    },
+    {
+      language: "python",
+      label: "Python",
+      code:
+`try:
+    token = service.verify("auth-code")
+    print(f"Access Token: {token}")
+except Exception as error:
+    print(f"Failed to verify code: {error}")
+`
+  },
+    {
+language: "typescript",
+      label: "TypeScript",
+      code:
+      `try {
+  const token = await sdk.verify('auth-code');
+  console.log('Access Token:', token);
+} catch (error) {
+  console.error('Failed to verify code:', error);
+}
+`
+    }
+  ]}
+/>
+
+
+### Fetch User Information
+
+Once authenticated, retrieve current user details:
+
+<CodeBlock
+  copyButton={false}
+  codes={[
+    {
+      language: "go",
+      label: "Go",
+      code: `user, err := service.Me(ctx, token)
+  if err != nil {
+    log.Fatalf("Failed to fetch user: %v", err)
+  }
+  fmt.Printf("User: %+v", user)
+`,
+    },
+      {
+      language: "rust",
+      label: "Rust",
+      code:`// Get user information
+let user = service.me(&token).await?;
+println!("User: {} ({})", user.name, user.email);
+`
+    },
+    {
+      language: "python",
+      label: "Python",
+      code:
+`try:
+    user = service.me(token)
+    print(f"User: {user.name} ({user.email})")
+except Exception as error:
+    print(f"Failed to fetch user information: {error}")
+`
+  },
+    {
+language: "typescript",
+      label: "TypeScript",
+      code:
+      `try {
+  const user = await sdk.me(token);
+  console.log('User:', user);
+} catch (error) {
+  console.error('Failed to fetch user information:', error);
+}`
+    }
+  ]}
+/>
+
+# Advanced Features
+
+## Resource Management
+
+Create and manage resources in your application:
+
+<CodeBlock
+  copyButton={false}
+  codes={[
+    {
+      language: "go",
+      label: "Go",
+      code: `resource := &golang.Resource{
+    ID:          "resource-id",
+    Name:        "User Dashboard",
+    Description: "Main user dashboard resource",
+    Tags:        []string{"dashboard", "user"},
+}
+
+err = service.CreateResource(ctx, resource)
+if err != nil {
+    log.Fatalf("Failed to create resource: %v", err)
+}`,
+    },
+      {
+      language: "rust",
+      label: "Rust",
+      code:`let resource = Resource::new("resource-1".to_string(), "My Resource".to_string());
+service.create_resource(&resource, &token).await?;
+println!("Resource created successfully");`
+    },
+    {
+      language: "python",
+      label: "Python",
+      code:
+`from goiam import Resource
+
+resource = Resource(
+    id="resource-id",
+    name="Resource Name",
+    description="Resource Description",
+    key="resource-key",
+    enabled=True,
+    project_id="project-id",
+    created_by="creator",
+    updated_by="updater"
+)
+
+try:
+    service.create_resource(resource, token)
+    print("Resource created successfully")
+except Exception as error:
+    print(f"Failed to create resource: {error}")
+`
+  },
+    {
+language: "typescript",
+      label: "TypeScript",
+      code:
+      `const resource = {
+  id: 'resource-id',
+  name: 'Resource Name',
+  description: 'Resource Description',
+  key: 'resource-key',
+  enabled: true,
+  projectId: 'project-id',
+  createdBy: 'creator',
+  updatedBy: 'updater',
+};
+
+try {
+  await sdk.createResource(resource, token);
+  console.log('Resource created successfully');
+} catch (error) {
+  console.error('Failed to create resource:', error);
+}`
+    }
+  ]}
+/>
+
+## User object
+
+<CodeBlock
+  copyButton={false}
+  codes={[
+    {
+      language: "go",
+      label: "Go",
+      code: `type User struct {
+	    Id             string                  \`json:"id"\`
+	    ProjectId      string                  \`json:"project_id"\`
+	    Name           string                  \`json:"name"\`
+	    Email          string                  \`json:"email"\`
+	    Phone          string                  \`json:"phone"\`
+	    Enabled        bool                    \`json:"enabled"\`
+	    ProfilePic     string                  \`json:"profile_pic"\`
+	    LinkedClientId string                  \`json:"linked_client_id,omitempty"\`
+	    Expiry         *time.Time              \`json:"expiry"\`
+	    Roles          map[string]UserRole     \`json:"roles"\`
+	    Resources      map[string]UserResource \`json:"resources"\`
+	    Policies       map[string]UserPolicy   \`json:"policies"\`
+	    CreatedAt      *time.Time              \`json:"created_at"\`
+	    CreatedBy      string                  \`json:"created_by"\`
+	    UpdatedAt      *time.Time              \`json:"updated_at"\`
+	    UpdatedBy      string                  \`json:"updated_by"\`
+}
+
+type UserPolicy struct {
+	    Name    string            \`json:"name"\`
+	    Mapping UserPolicyMapping \`json:"mapping,omitempty"\`
+}
+
+type UserPolicyMapping struct {
+	    Arguments map[string]UserPolicyMappingValue \`json:"arguments,omitempty"\`
+}
+
+type UserPolicyMappingValue struct {
+	    Static string \`json:"static,omitempty"\`
+}
+
+type UserRole struct {
+	    Id   string \`json:"id"\`
+	    Name string \`json:"name"\`
+}
+
+type UserResource struct {
+	    RoleIds   map[string]bool \`json:"role_ids"\`
+	    PolicyIds map[string]bool \`json:"policy_ids"\`
+	    Key       string          \`json:"key"\`
+	    Name      string          \`json:"name"\`
+}`,
+    },
+      {
+      language: "rust",
+      label: "Rust",
+      code:`#[derive(Debug, Clone, Deserialize, Serialize)]
+pub struct User {
+    pub id: String,
+    pub project_id: String,
+    pub name: String,
+    pub email: String,
+    pub phone: String,
+    pub enabled: bool,
+    pub profile_pic: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub linked_client_id: Option<String>,
+    pub expiry: Option<String>,
+    pub roles: HashMap<String, UserRole>,
+    pub resources: HashMap<String, UserResource>,
+    pub policies: HashMap<String, UserPolicy>,
+    pub created_at: Option<String>,
+    pub created_by: String,
+    pub updated_at: Option<String>,
+    pub updated_by: String,
+}
+
+#[derive(Debug, Clone, Deserialize, Serialize)]
+pub struct UserPolicy {
+    pub name: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub mapping: Option<UserPolicyMapping>,
+}
+
+#[derive(Debug, Clone, Deserialize, Serialize)]
+pub struct UserPolicyMapping {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub arguments: Option<HashMap<String, UserPolicyMappingValue>>,
+}
+
+#[derive(Debug, Clone, Deserialize, Serialize)]
+pub struct UserPolicyMappingValue {
+    #[serde(rename = "static", skip_serializing_if = "Option::is_none")]
+    pub static_val: Option<String>,
+}
+
+#[derive(Debug, Clone, Deserialize, Serialize)]
+pub struct UserRole {
+    pub id: String,
+    pub name: String,
+}
+
+#[derive(Debug, Clone, Deserialize, Serialize)]
+pub struct UserResource {
+    pub role_ids: HashMap<String, bool>,
+    pub policy_ids: HashMap<String, bool>,
+    pub key: String,
+    pub name: String,
+}`
+    },
+    {
+      language: "python",
+      label: "Python",
+      code:
+`class User:
+    def __init__(self, data: Dict[str, Any]):
+        self.id: str = data.get("id", "")
+        self.project_id: str = data.get("project_id", "")
+        self.name: str = data.get("name", "")
+        self.email: str = data.get("email", "")
+        self.phone: str = data.get("phone", "")
+        self.enabled: bool = data.get("enabled", False)
+        self.profile_pic: str = data.get("profile_pic", "")
+        self.linked_client_id: Optional[str] = data.get("linked_client_id")
+        self.expiry: Optional[str] = data.get("expiry")
+        self.roles: Dict[str, "UserRole"] = {
+            k: UserRole(v) for k, v in data.get("roles", {}).items()
+        }
+        self.resources: Dict[str, "UserResource"] = {
+            k: UserResource(v) for k, v in data.get("resources", {}).items()
+        }
+        self.policies: Dict[str, "UserPolicy"] = {
+            k: UserPolicy(v) for k, v in data.get("policies", {}).items()
+        }
+        self.created_at: Optional[str] = data.get("created_at")
+        self.created_by: str = data.get("created_by", "")
+        self.updated_at: Optional[str] = data.get("updated_at")
+        self.updated_by: str = data.get("updated_by", "")
+
+
+class UserPolicy:
+    def __init__(self, data: Dict[str, Any]):
+        self.name: str = data.get("name", "")
+        self.mapping: Optional[UserPolicyMapping] = None
+        if data.get("mapping"):
+            self.mapping = UserPolicyMapping(data["mapping"])
+
+
+class UserPolicyMapping:
+    def __init__(self, data: Dict[str, Any]):
+        self.arguments: Optional[Dict[str, UserPolicyMappingValue]] = None
+        if data.get("arguments"):
+            self.arguments = {
+                k: UserPolicyMappingValue(v) for k, v in data["arguments"].items()
+            }
+
+
+class UserPolicyMappingValue:
+    def __init__(self, data: Dict[str, Any]):
+        self.static: Optional[str] = data.get("static")
+
+
+class UserRole:
+    def __init__(self, data: Dict[str, Any]):
+        self.id: str = data.get("id", "")
+        self.name: str = data.get("name", "")
+
+
+class UserResource:
+    def __init__(self, data: Dict[str, Any]):
+        self.role_ids: Dict[str, bool] = data.get("role_ids", {})
+        self.policy_ids: Dict[str, bool] = data.get("policy_ids", {})
+        self.key: str = data.get("key", "")
+        self.name: str = data.get("name", "")
+`
+  },
+    {
+language: "typescript",
+      label: "TypeScript",
+      code:
+      `export interface User {
+    id: string;
+    project_id: string;
+    name: string;
+    email: string;
+    phone: string;
+    enabled: boolean;
+    profile_pic: string;
+    linked_client_id?: string;
+    expiry?: string;
+    roles: Record<string, UserRole>;
+    resources: Record<string, UserResource>;
+    policies: Record<string, UserPolicy>;
+    created_at?: string;
+    created_by: string;
+    updated_at?: string;
+    updated_by: string;
+}
+
+export interface UserPolicy {
+    name: string;
+    mapping?: UserPolicyMapping;
+}
+
+export interface UserPolicyMapping {
+    arguments?: Record<string, UserPolicyMappingValue>;
+}
+
+export interface UserPolicyMappingValue {
+    static?: string;
+}
+
+export interface UserRole {
+    id: string;
+    name: string;
+}
+
+export interface UserResource {
+    role_ids: { [key: string]: boolean };
+    policy_ids: { [key: string]: boolean };
+    key: string;
+    name: string;
+}`
+    }
+  ]}
+/>
+
+## Resource object
+
+<CodeBlock
+  copyButton={false}
+  codes={[
+    {
+      language: "go",
+      label: "Go",
+      code: `type Resource struct {
+        ID          string     \`json:"id"\`
+        Name        string     \`json:"name"\`
+        Description string     \`json:"description"\`
+        Key         string     \`json:"key"\`
+        Enabled     bool       \`json:"enabled"\`
+        ProjectId   string     \`json:"project_id"\`
+        CreatedAt   *time.Time \`json:"created_at"\`
+        CreatedBy   string     \`json:"created_by"\`
+        UpdatedAt   *time.Time \`json:"updated_at"\`
+        UpdatedBy   string     \`json:"updated_by"\`
+        DeletedAt   *time.Time \`json:"deleted_at,omitempty"\`
+}`,
+    },
+      {
+      language: "rust",
+      label: "Rust",
+      code:`#[derive(Debug, Clone, Deserialize, Serialize)]
+pub struct Resource {
+    pub id: String,
+    pub name: String,
+    pub description: String,
+    pub key: String,
+    pub enabled: bool,
+    pub project_id: String,
+    pub created_at: Option<String>,
+    pub created_by: String,
+    pub updated_at: Option<String>,
+    pub updated_by: String,
+    pub deleted_at: Option<String>,
+}
+
+impl Resource {
+    pub fn new(name: String, description: String, key: String) -> Self {
+        Self {
+            id: String::new(),
+            name,
+            description,
+            key,
+            enabled: true,
+            project_id: String::new(),
+            created_at: None,
+            created_by: String::new(),
+            updated_at: None,
+            updated_by: String::new(),
+            deleted_at: None,
+        }
+    }
+}`
+    },
+    {
+      language: "python",
+      label: "Python",
+      code:
+`class Resource:
+    def __init__(
+        self,
+        id: str = "",
+        name: str = "",
+        description: str = "",
+        key: str = "",
+        enabled: bool = True,
+        project_id: str = "",
+        created_by: str = "",
+        updated_by: str = "",
+        created_at: Optional[str] = None,
+        updated_at: Optional[str] = None,
+        deleted_at: Optional[str] = None,
+    ):
+        self.id = id
+        self.name = name
+        self.description = description
+        self.key = key
+        self.enabled = enabled
+        self.project_id = project_id
+        self.created_at = created_at
+        self.created_by = created_by
+        self.updated_at = updated_at
+        self.updated_by = updated_by
+        self.deleted_at = deleted_at
+
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "id": self.id,
+            "name": self.name,
+            "description": self.description,
+            "key": self.key,
+            "enabled": self.enabled,
+            "project_id": self.project_id,
+            "created_at": self.created_at,
+            "created_by": self.created_by,
+            "updated_at": self.updated_at,
+            "updated_by": self.updated_by,
+            "deleted_at": self.deleted_at,
+        }`
+  },
+    {
+language: "typescript",
+      label: "TypeScript",
+      code:
+      `interface Resource {
+    id: string;
+    name: string;
+    description: string;
+    key: string;
+    enabled: boolean;
+    project_id: string;
+    created_at?: string;
+    created_by: string;
+    updated_at?: string;
+    updated_by: string;
+    deleted_at?: string;
+}`
+    }
+  ]}
+/>

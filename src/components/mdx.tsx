@@ -24,9 +24,9 @@ import {
   List,
   ListItem,
   Line,
+  CodeBlock,
 } from "@once-ui-system/core";
 import { PageList } from "./PageList";
-import { CodeBlock } from "@/components/code/CodeBlock";
 
 const onceUIComponents = {
   Table,

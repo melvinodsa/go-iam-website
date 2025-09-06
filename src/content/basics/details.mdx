@@ -38,7 +38,7 @@ The authentication layer handles **who** can access your system by integrating w
 Go IAM connects to external authentication systems to verify user identities:
 
 #### Currently Supported
-- **🔍 Google OAuth** - Full integration with Google's authentication system
+- **🔍 Google, Microsoft, GitHub OAuth** - Full integration with common authentication systems
 
 #### Extensible Architecture
 The system is designed for easy extension to support additional providers like:
@@ -56,7 +56,7 @@ For your applications that need authentication, you create **clients** in Go IAM
 graph LR
     A[Your App] --> B[Go IAM Client]
     B --> C[Auth Provider]
-    C --> D[Google/External]
+    C --> D[Google/Microsoft/GitHub/External]
 ```
 
 #### Key Features:

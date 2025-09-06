@@ -13,7 +13,7 @@
   "dependencies": {
     "@mdx-js/loader": "^3.1.0",
     "@next/mdx": "^15.4.6",
-    "@once-ui-system/core": "^1.4.26",
+    "@once-ui-system/core": "^1.4.30",
     "@scalar/api-reference-react": "^0.7.40",
     "@scalar/nextjs-api-reference": "^0.8.16",
     "@types/prismjs": "^1.26.5",

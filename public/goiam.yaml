@@ -6,7 +6,7 @@ components:
             scheme: bearer
             type: http
 info:
-    description: "# Documentation for Go IAM APIs\n**go-iam** is a lightweight, multi-tenant Identity and Access Management (IAM) server built in **Golang**.\nIt provides robust authentication and fine-grained authorization for modern applications. With support for custom roles, third-party auth providers, and multi-client setups, *go-iam* gives you full control over access management in a scalable and modular way.\n\n\n![Go IAM Logo](/images/og/home.png)\n\n## Resources\n\n> ✅ Docs: [Official docs](https://goiam.dev/docs)   \n> ✅ Admin UI: [go-iam-ui](https://github.com/melvinodsa/go-iam-ui)  \n> \U0001F433 Docker Setup: [go-iam-docker](https://github.com/melvinodsa/go-iam-docker)  \n> \U0001F510 Backend: [go-iam](https://github.com/melvinodsa/go-iam)\n\n## How it works\n\n### Multi-Tenant Architecture\n*go-iam* is designed to handle multiple projects or applications within a single instance.\nEach project can have its own set of users, roles, auth providers, resources, clients, and policies, allowing for efficient resource management and isolation.\n\n### Authentication and Authorization\n\n*go-iam* supports multiple authentication providers like Google, GitHub, and custom OAuth2 providers.\nIt uses JWT tokens for secure, stateless authentication. The server can be configured to require authentication for specific routes or resources.\nUsers can be authenticated using auth providers. Multiple applications can share the same auth provider, allowing for a unified login experience across different projects.\nYou can create an auth provider and link it to multiple clients. Applications use clients to authenticate users.\n\n![Auth process](/images/og/auth-backend.svg)\n\n### Resources and Roles\n\nAnything that needs access control is considered a resource in *go-iam*. Resources can be anything from API endpoints to database records.\nResources can be added to roles. And roles can be assigned to users. There policies can be used to define fine-grained access control.\n\n![Auth process](/images/og/resources-roles-users.svg)\n\n\n<details>\n<summary>Examples</summary>\n\nYou can create a button called **@ui/my-super-app/button** that allows users to create an account in your application.\nYou can create a resource called **@ui/my-super-app/resource** that represents the button in your application.\nThen you can create a role called **@ui/my-super-app/role** that allows users to access the button. Add the resource to the role.\nThen you can assign the role to users. Users can then access the button in your application.\n</details>"
+    description: "# Documentation for Go IAM APIs\n**go-iam** is a lightweight, multi-tenant Identity and Access Management (IAM) server built in **Golang**.\nIt provides robust authentication and fine-grained authorization for modern applications. With support for custom roles, third-party auth providers, and multi-client setups, *go-iam* gives you full control over access management in a scalable and modular way.\n\n\n![Go IAM Logo](/docs/goiam.png)\n\n## Resources\n\n> ✅ Admin UI: [go-iam-ui](https://github.com/melvinodsa/go-iam-ui)  \n> \U0001F433 Docker Setup: [go-iam-docker](https://github.com/melvinodsa/go-iam-docker)  \n> \U0001F510 Backend: [go-iam](https://github.com/melvinodsa/go-iam)\n\n## How it works\n\n### Multi-Tenant Architecture\n*go-iam* is designed to handle multiple projects or applications within a single instance.\nEach project can have its own set of users, roles, auth providers, resources, clients, and policies, allowing for efficient resource management and isolation.\n\n### Authentication and Authorization\n\n*go-iam* supports multiple authentication providers like Google, Microsoft, GitHub, and custom OAuth2 providers.\nIt uses JWT tokens for secure, stateless authentication. The server can be configured to require authentication for specific routes or resources.\nUsers can be authenticated using auth providers. Multiple applications can share the same auth provider, allowing for a unified login experience across different projects.\nYou can create an auth provider and link it to multiple clients. Applications use clients to authenticate users.\n\n![Auth process](/docs/auth-backend.svg)\n\n### Resources and Roles\n\nAnything that needs access control is considered a resource in *go-iam*. Resources can be anything from API endpoints to database records.\nResources can be added to roles. And roles can be assigned to users. There policies can be used to define fine-grained access control.\n\n![Auth process](/docs/resources-roles-users.svg)\n\n\n<details>\n<summary>Examples</summary>\n\nYou can create a button called **@ui/my-super-app/button** that allows users to create an account in your application.\nYou can create a resource called **@ui/my-super-app/resource** that represents the button in your application.\nThen you can create a role called **@ui/my-super-app/role** that allows users to access the button. Add the resource to the role.\nThen you can assign the role to users. Users can then access the button in your application.\n</details>"
     title: Go IAM APIs
     version: 1.0.0
 openapi: 3.0.3
@@ -38,6 +38,41 @@ paths:
             summary: Redirect
             tags:
                 - Auth
+    /auth/v1/client:
+        post:
+            description: Authenticate using client credentials for service accounts
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            properties:
+                                client_id:
+                                    type: string
+                                client_secret:
+                                    type: string
+                            type: object
+                description: Client credentials
+            responses:
+                default:
+                    content:
+                        application/json:
+                            schema:
+                                properties:
+                                    data:
+                                        nullable: true
+                                        properties:
+                                            access_token:
+                                                type: string
+                                        type: object
+                                    message:
+                                        type: string
+                                    success:
+                                        type: boolean
+                                type: object
+                    description: Authentication successful
+            summary: Client
+            tags:
+                - Auth
     /auth/v1/login:
         get:
             description: Login to the application
@@ -55,6 +90,12 @@ paths:
                 - description: The URL to redirect to after login
                   in: query
                   name: redirect_url
+                - description: Code challenge method for PKCE. This required for public clients. For security reasons, only S256 is supported.
+                  in: query
+                  name: code_challenge_method
+                - description: Code challenge for PKCE. This required for public clients
+                  in: query
+                  name: code_challenge
             responses:
                 default:
                     content:
@@ -83,6 +124,12 @@ paths:
                   in: query
                   name: code
                   required: true
+                - description: The code verifier
+                  in: query
+                  name: code_challenge
+                - description: The client ID to be provided if code verifier is provided
+                  in: query
+                  name: client_id
             responses:
                 default:
                     content:
@@ -506,6 +553,8 @@ paths:
                                                     type: boolean
                                                 id:
                                                     type: string
+                                                linked_user_id:
+                                                    type: string
                                                 name:
                                                     type: string
                                                 project_id:
@@ -519,6 +568,8 @@ paths:
                                                         type: string
                                                     type: array
                                                 secret:
+                                                    type: string
+                                                service_account_email:
                                                     type: string
                                                 tags:
                                                     items:
@@ -573,6 +624,8 @@ paths:
                                     type: boolean
                                 id:
                                     type: string
+                                linked_user_id:
+                                    type: string
                                 name:
                                     type: string
                                 project_id:
@@ -586,6 +639,8 @@ paths:
                                         type: string
                                     type: array
                                 secret:
+                                    type: string
+                                service_account_email:
                                     type: string
                                 tags:
                                     items:
@@ -624,6 +679,8 @@ paths:
                                                 type: boolean
                                             id:
                                                 type: string
+                                            linked_user_id:
+                                                type: string
                                             name:
                                                 type: string
                                             project_id:
@@ -637,6 +694,8 @@ paths:
                                                     type: string
                                                 type: array
                                             secret:
+                                                type: string
+                                            service_account_email:
                                                 type: string
                                             tags:
                                                 items:
@@ -699,6 +758,8 @@ paths:
                                                 type: boolean
                                             id:
                                                 type: string
+                                            linked_user_id:
+                                                type: string
                                             name:
                                                 type: string
                                             project_id:
@@ -712,6 +773,8 @@ paths:
                                                     type: string
                                                 type: array
                                             secret:
+                                                type: string
+                                            service_account_email:
                                                 type: string
                                             tags:
                                                 items:
@@ -769,6 +832,8 @@ paths:
                                     type: boolean
                                 id:
                                     type: string
+                                linked_user_id:
+                                    type: string
                                 name:
                                     type: string
                                 project_id:
@@ -782,6 +847,8 @@ paths:
                                         type: string
                                     type: array
                                 secret:
+                                    type: string
+                                service_account_email:
                                     type: string
                                 tags:
                                     items:
@@ -820,6 +887,8 @@ paths:
                                                 type: boolean
                                             id:
                                                 type: string
+                                            linked_user_id:
+                                                type: string
                                             name:
                                                 type: string
                                             project_id:
@@ -833,6 +902,8 @@ paths:
                                                     type: string
                                                 type: array
                                             secret:
+                                                type: string
+                                            service_account_email:
                                                 type: string
                                             tags:
                                                 items:
@@ -854,6 +925,26 @@ paths:
             security:
                 - BearerAuth: []
             summary: Update Client
+            tags:
+                - Client
+    /client/v1/{id}/regenerate-secret:
+        put:
+            description: Regenerate the secret for a client
+            parameters:
+                - description: The ID of the client
+                  in: path
+                  name: id
+                  required: true
+                - description: Comma-separated list of project IDs. If not provided, the API will use the default project ID configured in the server.
+                  in: header
+                  name: X-Project-Ids
+                  required: true
+                  schema:
+                    type: string
+            responses: null
+            security:
+                - BearerAuth: []
+            summary: Regenerate Client Secret
             tags:
                 - Client
     /me/v1/dashboard:
@@ -892,6 +983,8 @@ paths:
                                                         nullable: true
                                                         type: string
                                                     id:
+                                                        type: string
+                                                    linked_client_id:
                                                         type: string
                                                     name:
                                                         type: string
@@ -982,6 +1075,8 @@ paths:
                                                 nullable: true
                                                 type: string
                                             id:
+                                                type: string
+                                            linked_client_id:
                                                 type: string
                                             name:
                                                 type: string
@@ -2157,6 +2252,8 @@ paths:
                                                             type: string
                                                         id:
                                                             type: string
+                                                        linked_client_id:
+                                                            type: string
                                                         name:
                                                             type: string
                                                         phone:
@@ -2250,6 +2347,8 @@ paths:
                                     type: string
                                 id:
                                     type: string
+                                linked_client_id:
+                                    type: string
                                 name:
                                     type: string
                                 phone:
@@ -2325,6 +2424,8 @@ paths:
                                                 nullable: true
                                                 type: string
                                             id:
+                                                type: string
+                                            linked_client_id:
                                                 type: string
                                             name:
                                                 type: string
@@ -2426,6 +2527,8 @@ paths:
                                                 type: string
                                             id:
                                                 type: string
+                                            linked_client_id:
+                                                type: string
                                             name:
                                                 type: string
                                             phone:
@@ -2521,6 +2624,8 @@ paths:
                                     type: string
                                 id:
                                     type: string
+                                linked_client_id:
+                                    type: string
                                 name:
                                     type: string
                                 phone:
@@ -2596,6 +2701,8 @@ paths:
                                                 nullable: true
                                                 type: string
                                             id:
+                                                type: string
+                                            linked_client_id:
                                                 type: string
                                             name:
                                                 type: string
@@ -2725,6 +2832,8 @@ paths:
                                                 type: string
                                             id:
                                                 type: string
+                                            linked_client_id:
+                                                type: string
                                             name:
                                                 type: string
                                             phone:
@@ -2839,6 +2948,8 @@ paths:
                                                 nullable: true
                                                 type: string
                                             id:
+                                                type: string
+                                            linked_client_id:
                                                 type: string
                                             name:
                                                 type: string

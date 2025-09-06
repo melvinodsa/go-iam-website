@@ -12,8 +12,8 @@ dependencies:
     specifier: ^15.4.6
     version: 15.4.6(@mdx-js/loader@3.1.0)
   '@once-ui-system/core':
-    specifier: ^1.4.26
-    version: 1.4.26(next@15.3.2)(react-dom@19.0.0)(react@19.0.0)(sass@1.90.0)(sharp@0.33.5)
+    specifier: ^1.4.30
+    version: 1.4.30(next@15.3.2)(react-dom@19.0.0)(react@19.0.0)(sass@1.90.0)(sharp@0.33.5)
   '@scalar/api-reference-react':
     specifier: ^0.7.40
     version: 0.7.40(react@19.0.0)(tailwindcss@4.1.12)(typescript@5.8.2)
@@ -473,7 +473,7 @@ packages:
       react: '>=16.8.0'
       react-dom: '>=16.8.0'
     dependencies:
-      '@floating-ui/dom': 1.7.3
+      '@floating-ui/dom': 1.7.4
       react: 19.0.0
       react-dom: 19.0.0(react@19.0.0)
     dev: false
@@ -1249,8 +1249,8 @@ packages:
     engines: {node: '>=12.4.0'}
     dev: true
 
-  /@once-ui-system/core@1.4.26(next@15.3.2)(react-dom@19.0.0)(react@19.0.0)(sass@1.90.0)(sharp@0.33.5):
-    resolution: {integrity: sha512-o6AkPNBPtR1KKo5dsY9vQuhfvk7BUfiJYnHxQVP/O/1ndGv+KBVsXbX+AvlSn3WMxeK8MQEZnYIrTVAYFlldDg==}
+  /@once-ui-system/core@1.4.30(next@15.3.2)(react-dom@19.0.0)(react@19.0.0)(sass@1.90.0)(sharp@0.33.5):
+    resolution: {integrity: sha512-5K8gDowtroADAR9asB6Omdr0kWcP2L0l12qQAkcwU1/GyCcavTPPUPtwV1zllQZ830xgw8TltTzw1XYe5OLx0Q==}
     peerDependencies:
       next: '>=13.4'
       react: '>=18'
