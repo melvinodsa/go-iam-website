@@ -51,13 +51,31 @@ The system is designed for easy extension to support additional providers like:
 ### Client Management
 
 For your applications that need authentication, you create **clients** in Go IAM:
+Go IAM treats user and application as first class citizens. This means both users and applications can authenticate and get authorized to access resources. Applications use client credentials to authenticate themselves. Users use thrid party auth managers provided by Go IAM.
 
 ```mermaid
-graph LR
-    A[Your App] --> B[Go IAM Client]
-    B --> C[Auth Provider]
-    C --> D[Google/Microsoft/GitHub/External]
+sequenceDiagram
+    My App 1->>My App 2: I am hitting `cool api`
+    My App 2-->>Go IAM: Can you share identity of the caller
+    Go IAM-->>Redis: Can you get the identity of the caller I had cached
+    Redis-->>Go IAM: Here you go, it is My App 1
+    Go IAM -->> My App 2: Here you go, its My App 1 and its access
+    My App 2 ->> My App 1: I can see that you are `My App 1` and <br/>you have access to call `cool` api<br/>Here you go with the response
 ```
+
+<Media src="/images/diagrams/appauth.svg" alt="Client Management Diagram"/>
+
+```mermaid
+sequenceDiagram
+    User 1->>My App: I am hitting `cool api`
+    My App-->>Go IAM: Can you share identity of the caller
+    Go IAM-->>Redis: Can you get the identity of the caller I had cached
+    Redis-->>Go IAM: Here you go, it is User 1
+    Go IAM -->> My App 2: Here you go, its User 1 and its access
+    My App ->> User 1: I can see that you are `User 1` and <br/>you have access to call `cool` api<br/>Here you go with the response
+```
+
+<Media src="/images/diagrams/userauth.svg" alt="Client Management Diagram"/>
 
 #### Key Features:
 - **One-to-Many Mapping**: A single auth provider can serve multiple clients

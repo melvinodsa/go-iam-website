@@ -1,4 +1,5 @@
 import { MDXRemote, MDXRemoteProps } from "next-mdx-remote/rsc";
+import { Mermaid } from 'mdx-mermaid/Mermaid';
 
 import React, { ReactNode } from "react";
 

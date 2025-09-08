@@ -116,7 +116,7 @@ export default function Home() {
             <Heading variant="display-default-l" align="center">
               Why Choose Go IAM?
             </Heading>
-            <Column maxWidth="l">
+            <Column fillWidth>
               <Text
                 variant="heading-default-m"
                 onBackground="neutral-weak"
