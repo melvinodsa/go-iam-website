@@ -109,6 +109,126 @@ export default function Home() {
         </Column>
       </Column>
 
+      {/* Performance Benchmarks Section */}
+      <Column fillWidth padding="xl" horizontal="center" gap="xl" align="center">
+        <Column maxWidth="xl" fillWidth gap="xl" vertical="center">
+          <Column gap="m" align="center" horizontal="center">
+            <Heading variant="display-default-l" align="center">
+              <Text onBackground="brand-strong">Lightning Fast</Text> Performance
+            </Heading>
+            <Text
+              variant="heading-default-m"
+              onBackground="neutral-weak"
+              align="center"
+              wrap="balance"
+            >
+              Benchmarked with Vegeta load testing tool
+            </Text>
+          </Column>
+
+          <Row gap="l" wrap style={{ display: "flex", justifyContent: "center" }}>
+            <Column
+              maxWidth="xs"
+              gap="s"
+              padding="l"
+              background="neutral-weak"
+              radius="l"
+              border="neutral-alpha-weak"
+              align="center"
+            >
+              <Text variant="display-strong-s" onBackground="brand-strong">1K</Text>
+              <Text variant="label-default-s" onBackground="neutral-medium">RPS</Text>
+              <Text variant="body-default-xs" onBackground="neutral-weak" align="center">
+                Requests per second
+              </Text>
+            </Column>
+
+            <Column
+              maxWidth="xs"
+              gap="s"
+              padding="l"
+              background="neutral-weak"
+              radius="l"
+              border="neutral-alpha-weak"
+              align="center"
+            >
+              <Text variant="display-strong-s" onBackground="brand-strong">1.7ms</Text>
+              <Text variant="label-default-s" onBackground="neutral-medium">P50 Latency</Text>
+              <Text variant="body-default-xs" onBackground="neutral-weak" align="center">
+                Median response time
+              </Text>
+            </Column>
+
+            <Column
+              maxWidth="xs"
+              gap="s"
+              padding="l"
+              background="neutral-weak"
+              radius="l"
+              border="neutral-alpha-weak"
+              align="center"
+            >
+              <Text variant="display-strong-s" onBackground="brand-strong">100%</Text>
+              <Text variant="label-default-s" onBackground="neutral-medium">Success Rate</Text>
+              <Text variant="body-default-xs" onBackground="neutral-weak" align="center">
+                30K requests
+              </Text>
+            </Column>
+
+            <Column
+              maxWidth="xs"
+              gap="s"
+              padding="l"
+              background="neutral-weak"
+              radius="l"
+              border="neutral-alpha-weak"
+              align="center"
+            >
+              <Text variant="display-strong-s" onBackground="brand-strong">2.6ms</Text>
+              <Text variant="label-default-s" onBackground="neutral-medium">P90 Latency</Text>
+              <Text variant="body-default-xs" onBackground="neutral-weak" align="center">
+                90th percentile
+              </Text>
+            </Column>
+          </Row>
+
+          <Column
+            gap="m"
+            padding="xl"
+            background="page"
+            radius="l"
+            wrap
+          >
+            <Row gap="m" align="center">
+              <Icon name="chartBar" size="m" onBackground="brand-strong" />
+              <Heading variant="heading-strong-m">Load Test Results</Heading>
+            </Row>
+
+            <Column fillWidth gap="s" style={{ fontFamily: 'monospace', fontSize: '14px' }}>
+              <Row gap="m" wrap>
+                <Text variant="body-default-s" style={{ fontFamily: 'monospace' }}>
+                  Requests: <strong>30,000 total</strong> | Rate: <strong>1,000/sec</strong>
+                </Text>
+              </Row>
+              <Row gap="m" wrap>
+                <Text variant="body-default-s" style={{ fontFamily: 'monospace' }}>
+                  Duration: <strong>30.0s</strong> | Success: <strong>100%</strong>
+                </Text>
+              </Row>
+              <Row gap="m" wrap>
+                <Text variant="body-default-s" style={{ fontFamily: 'monospace' }}>
+                  Latencies: min <strong>1.0ms</strong> | mean <strong>2.0ms</strong> | max <strong>56.6ms</strong>
+                </Text>
+              </Row>
+            </Column>
+
+            <Text variant="body-default-s" onBackground="neutral-weak">
+              * Tested with Vegeta load testing tool on minimum(1GB, 2CPU) hardware configuration
+            </Text>
+          </Column>
+        </Column>
+      </Column>
+
       {/* Features Section */}
       <Column fillWidth padding="xl" background="neutral-weak" horizontal="center" gap="xl" align="center">
         <Column maxWidth="xl" fillWidth gap="xl">
