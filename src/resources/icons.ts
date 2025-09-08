@@ -13,6 +13,7 @@ import {
   FaReact,
   FaRust,
   FaLaptopCode,
+  FaAws,
 } from "react-icons/fa";
 
 import {
@@ -29,6 +30,9 @@ import { SiTypescript } from "react-icons/si";
 import { IoLayers } from "react-icons/io5";
 import { FcDeployment } from "react-icons/fc";
 import { TbApi } from "react-icons/tb";
+import { DiGoogleCloudPlatform } from "react-icons/di";
+import { VscAzure } from "react-icons/vsc";
+
 
 
 export const iconLibrary: Record<string, IconType> = {
@@ -52,6 +56,9 @@ export const iconLibrary: Record<string, IconType> = {
   layers: IoLayers,
   deployment: FcDeployment,
   api: TbApi,
+  gcp: DiGoogleCloudPlatform,
+  aws: FaAws,
+  azure: VscAzure,
 };
 
 
