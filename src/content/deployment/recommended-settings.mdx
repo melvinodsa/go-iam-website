@@ -1,0 +1,422 @@
+---
+title: "Recommended Settings"
+updatedAt: "2025-09-09"
+summary: "Detailed guide on recommended settings for deploying Go IAM in production environments."
+navLabel: "Recommended settings"
+navIcon: "deploy"
+---
+
+# Production Deployment Settings
+
+This guide provides recommended infrastructure settings and environment configurations for deploying Go IAM in production environments across different cloud providers.
+
+## 🏗️ Infrastructure Requirements
+
+### Minimum Production Setup
+
+The following setup can handle **1000 concurrent users** (both human users and applications):
+
+<Table
+  data={{
+    headers: [
+      { content: "Component", key: "component", sortable: true },
+      { content: "Specification", key: "specification", sortable: true },
+      { content: "Purpose", key: "purpose", sortable: true },
+    ],
+    rows: [
+      ["Go IAM Backend", "4GB RAM, 2 CPU Cores", "API server and authentication logic"],
+      ["MongoDB", "2GB RAM, 1 CPU Core, 8GB Storage", "Primary database for user data and configurations"],
+      ["Redis", "1GB RAM", "Session caching and performance optimization"],
+      ["Go IAM UI", "Static hosting (S3/CDN)", "Admin interface frontend"],
+    ],
+  }}
+  layout="fixed"
+  columnWidths={["30%", "30%", "40%"]}
+  border="neutral-alpha-medium"
+  radius="m"
+  padding="m"
+/>
+
+### Scaling Recommendations
+
+As your organization grows, you can scale each component independently:
+
+#### Small Organization (< 500 users)
+- Backend: 2GB RAM, 1 CPU Core
+- MongoDB: 1GB RAM, 1 CPU Core, 4GB Storage
+- Redis: 512MB RAM
+
+#### Medium Organization (500-2000 users)
+- Backend: 4GB RAM, 2 CPU Cores ⭐ **(Recommended)**
+- MongoDB: 2GB RAM, 1 CPU Core, 8GB Storage
+- Redis: 1GB RAM
+
+#### Large Organization (2000+ users)
+- Backend: 8GB RAM, 4 CPU Cores (multiple instances)
+- MongoDB: 4GB RAM, 2 CPU Cores, 16GB+ Storage
+- Redis: 2GB RAM (with clustering)
+
+
+## ☁️ Cloud Provider Deployment Options
+
+### 🔷 AWS Deployment
+
+#### Backend Options
+- **Serverless**: AWS Lambda with Application Load Balancer
+- **Container**: ECS Fargate (4GB memory, 2 vCPU)
+- **VM**: EC2 t3.medium instance
+
+#### Database & Cache
+- **MongoDB**: DocumentDB (db.t3.medium)
+- **Redis**: ElastiCache (cache.t3.micro)
+
+#### Frontend
+- **Static Hosting**: S3 + CloudFront CDN
+
+### 🔷 Google Cloud Platform
+
+#### Backend Options
+- **Serverless**: Cloud Run (4GB memory, 2 vCPU)
+- **Container**: GKE Standard cluster
+- **VM**: Compute Engine e2-medium
+
+#### Database & Cache
+- **MongoDB**: MongoDB Atlas on GCP
+- **Redis**: Memorystore for Redis
+
+#### Frontend
+- **Static Hosting**: Cloud Storage + Cloud CDN
+
+### 🔷 Microsoft Azure
+
+#### Backend Options
+- **Serverless**: Container Apps (4GB memory, 2 vCPU)
+- **Container**: Azure Container Instances
+- **VM**: Standard B2s Virtual Machine
+
+#### Database & Cache
+- **MongoDB**: Azure Cosmos DB (MongoDB API)
+- **Redis**: Azure Cache for Redis
+
+#### Frontend
+- **Static Hosting**: Azure Static Web Apps
+
+### 🔷 DigitalOcean
+
+#### Backend Options
+- **Droplet**: 4GB/2 vCPU Regular Intel Droplet
+- **App Platform**: Professional tier
+
+#### Database & Cache
+- **MongoDB**: Managed MongoDB Database
+- **Redis**: Managed Redis Database
+
+#### Frontend
+- **Static Hosting**: App Platform static site
+
+---
+
+## 🔧 Environment Configuration
+
+### Core Environment Variables
+
+```bash
+# Server Configuration
+SERVER_HOST=0.0.0.0
+SERVER_PORT=3000
+DEPLOYMENT_ENVIRONMENT=production
+DEPLOYMENT_NAME=Go IAM Production
+LOGGER_LEVEL=1
+
+# Database Configuration
+DB_HOST=mongodb://your-mongo-cluster/goiam
+REDIS_HOST=your-redis-cluster:6379
+REDIS_DB=0
+REDIS_PASSWORD=your-secure-redis-password
+ENABLE_REDIS=true
+
+# Security Configuration
+JWT_SECRET=your-super-secure-jwt-secret-key-minimum-32-characters
+ENCRYPTER_KEY=your-64-character-encryption-key-for-sensitive-data-storage
+
+# Cache & Performance
+TOKEN_CACHE_TTL_IN_MINUTES=1440
+AUTH_PROVIDER_REFETCH_INTERVAL_IN_MINUTES=10
+```
+
+### Go IAM UI Build Configuration
+
+The Go IAM UI is a React application built with Vite that requires building before deployment to static hosting.
+
+#### Build Environment Variable
+
+```bash
+# Required for building the UI
+VITE_API_SERVER=https://your-go-iam-api-domain.com
+```
+
+#### Building and Deploying the UI
+
+```bash
+# Clone the UI repository
+git clone https://github.com/melvinodsa/go-iam-ui.git
+cd go-iam-ui
+
+# Install dependencies
+npm install
+
+# Set the API server URL for your deployment
+export VITE_API_SERVER=https://your-go-iam-api-domain.com
+
+# Build the application
+npm run build
+
+# The built files will be in the 'dist' directory
+# Deploy the 'dist' directory to your static hosting service
+```
+
+#### Deployment Examples
+
+**AWS S3 + CloudFront**
+```bash
+# Upload built files to S3
+aws s3 sync dist/ s3://your-ui-bucket --delete
+
+# Invalidate CloudFront cache
+aws cloudfront create-invalidation --distribution-id YOUR_DISTRIBUTION_ID --paths "/*"
+```
+
+**Google Cloud Storage**
+```bash
+# Upload built files to Cloud Storage
+gsutil -m rsync -r -d dist/ gs://your-ui-bucket
+
+# Set public read permissions
+gsutil -m acl ch -r -u AllUsers:R gs://your-ui-bucket/*
+```
+
+**Azure Static Web Apps**
+```bash
+# Deploy using Azure CLI
+az staticwebapp deploy --name your-app-name --source dist/
+```
+
+**DigitalOcean App Platform**
+```yaml
+# app.yaml configuration
+name: go-iam-ui
+services:
+- name: ui
+  source_dir: /
+  github:
+    repo: your-username/go-iam-ui
+    branch: main
+  build_command: npm run build
+  output_dir: dist
+  environment_slug: node-js
+  envs:
+  - key: VITE_API_SERVER
+    value: https://your-go-iam-api-domain.com
+```
+
+#### Important Notes
+
+- **API URL**: The `VITE_API_SERVER` must point to your deployed Go IAM backend
+- **CORS Configuration**: Ensure your backend allows requests from the UI domain
+- **HTTPS**: Always use HTTPS for both the API and UI in production
+- **Build Time**: The environment variable is used at build time, not runtime
+
+### Security Best Practices
+
+#### 🔐 Critical Security Variables
+
+**JWT_SECRET**
+```bash
+# Generate a secure random key (minimum 32 characters)
+JWT_SECRET=$(openssl rand -base64 32)
+```
+
+**ENCRYPTER_KEY**
+```bash
+# Generate a 64-character hexadecimal encryption key
+ENCRYPTER_KEY=$(openssl rand -hex 32)
+```
+
+#### 🔒 Database Security
+
+**MongoDB Connection String**
+```bash
+# Use authentication and SSL/TLS
+DB_HOST=mongodb://username:password@cluster.mongodb.net/goiam?ssl=true&authSource=admin
+```
+
+**Redis Security**
+```bash
+# Always use password authentication
+REDIS_PASSWORD=your-strong-redis-password
+REDIS_HOST=your-redis-cluster:6380  # Use SSL port if available
+```
+
+---
+
+## 📊 Performance Tuning
+
+### Database Optimization
+
+#### MongoDB Indexes
+```javascript
+// Essential indexes for performance
+db.users.createIndex({ "email": 1 })
+db.users.createIndex({ "project_id": 1 })
+db.resources.createIndex({ "project_id": 1, "name": 1 })
+db.roles.createIndex({ "project_id": 1 })
+```
+
+#### Redis Configuration
+```bash
+# Optimize Redis for session storage
+REDIS_MAXMEMORY=512mb
+REDIS_MAXMEMORY_POLICY=allkeys-lru
+```
+
+### Application Performance
+
+#### Cache Settings
+```bash
+# Optimize token cache for your use case
+TOKEN_CACHE_TTL_IN_MINUTES=1440    # 24 hours (adjust based on security requirements)
+AUTH_PROVIDER_REFETCH_INTERVAL_IN_MINUTES=10  # Sync interval for external auth providers
+```
+
+#### Connection Pooling
+```bash
+# MongoDB connection pool (set in application config)
+MAX_POOL_SIZE=10
+MIN_POOL_SIZE=2
+```
+
+---
+
+## 🚀 Deployment Checklist
+
+### Pre-Deployment
+
+- [ ] **Generate secure secrets** for JWT and encryption
+- [ ] **Configure database** with proper authentication
+- [ ] **Set up Redis** with password protection
+- [ ] **Review environment variables** for production settings
+- [ ] **Configure SSL/TLS** certificates for HTTPS
+
+### Post-Deployment
+
+- [ ] **Verify health endpoints** are responding
+- [ ] **Test authentication flow** with external providers
+- [ ] **Configure monitoring** and alerting
+- [ ] **Set up backup** procedures for MongoDB
+- [ ] **Document recovery** procedures
+
+### Monitoring
+
+#### Health Check Endpoints
+```bash
+# API health check
+curl https://your-api-domain.com/health
+
+# Database connectivity
+curl https://your-api-domain.com/health/db
+```
+
+#### Key Metrics to Monitor
+- Response time (aim for < 100ms for auth endpoints)
+- Error rate (should be < 1%)
+- Database connection pool utilization
+- Redis hit rate (should be > 80%)
+- Memory usage (should be < 80% of allocated)
+
+---
+
+## 🛡️ Security Considerations
+
+### Network Security
+
+- **Use HTTPS** for all external communications
+- **Implement rate limiting** at the load balancer level
+- **Configure firewalls** to restrict database access
+- **Use VPCs/VNets** to isolate infrastructure components
+
+### Data Protection
+
+- **Encrypt data at rest** in MongoDB and Redis
+- **Use secure connection strings** with SSL/TLS
+- **Implement regular backups** with encryption
+- **Rotate secrets** regularly (JWT keys, encryption keys)
+
+### Access Control
+
+- **Limit admin access** to production environments
+- **Use IAM roles** instead of hardcoded credentials
+- **Implement audit logging** for all administrative actions
+- **Regular security reviews** of user permissions
+
+
+## 📈 Cost Optimization
+
+### Resource Efficiency
+
+- **Start small** and scale based on actual usage
+- **Use spot instances** for non-critical environments
+- **Implement auto-scaling** for variable workloads
+- **Monitor resource utilization** and right-size accordingly
+
+### Expected Monthly Costs
+
+#### AWS (us-east-1 region)
+- Backend (ECS Fargate): ~$40-60/month
+- MongoDB (DocumentDB): ~$80-120/month
+- Redis (ElastiCache): ~$20-30/month
+- Frontend (S3 + CloudFront): ~$5-10/month
+- **Total**: ~$145-220/month
+
+#### Google Cloud Platform
+- Backend (Cloud Run): ~$35-50/month
+- MongoDB (Atlas): ~$75-110/month
+- Redis (Memorystore): ~$25-35/month
+- Frontend (Storage + CDN): ~$5-10/month
+- **Total**: ~$140-205/month
+
+> 💡 **Tip**: Actual costs may vary based on traffic, storage usage, and specific cloud provider pricing. Consider reserved instances or committed use discounts for long-term deployments.
+
+---
+
+## 🔧 Troubleshooting
+
+### Common Issues
+
+#### High Memory Usage
+```bash
+# Check Redis memory usage
+redis-cli info memory
+
+# Optimize MongoDB queries
+db.users.explain("executionStats").find({email: "user@example.com"})
+```
+
+#### Slow Response Times
+```bash
+# Check database connection pool
+curl https://your-api-domain.com/metrics
+
+# Monitor Redis performance
+redis-cli --latency
+```
+
+#### Authentication Failures
+```bash
+# Verify JWT secret configuration
+echo $JWT_SECRET | wc -c  # Should be > 32 characters
+
+# Check external auth provider connectivity
+curl -I https://oauth2.googleapis.com/tokeninfo
+```
+
+For additional support and advanced configuration options, consult our [GitHub repository](https://github.com/melvinodsa/go-iam) or reach out to the community.

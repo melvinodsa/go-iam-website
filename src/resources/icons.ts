@@ -32,6 +32,7 @@ import { FcDeployment } from "react-icons/fc";
 import { TbApi } from "react-icons/tb";
 import { DiGoogleCloudPlatform } from "react-icons/di";
 import { VscAzure } from "react-icons/vsc";
+import { GrDeploy } from "react-icons/gr";
 
 
 
@@ -59,6 +60,7 @@ export const iconLibrary: Record<string, IconType> = {
   gcp: DiGoogleCloudPlatform,
   aws: FaAws,
   azure: VscAzure,
+  deploy: GrDeploy,
 };
 
 

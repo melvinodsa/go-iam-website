@@ -3,6 +3,7 @@
     "get-started": 1,
     "setup": 2,
     "sdk": 3,
-    "basics": 4
+    "basics": 4,
+    "deployment": 5
   }
 }
