@@ -321,16 +321,23 @@ Create and manage resources in your application:
     Tags:        []string{"dashboard", "user"},
 }
 
-err = service.CreateResource(ctx, resource)
+err = service.CreateResource(ctx, resource, "token")
 if err != nil {
     log.Fatalf("Failed to create resource: %v", err)
-}`,
+}
+
+err = service.DeleteResource(ctx, resource.ID, "token")
+if err != nil {
+    log.Fatalf("Failed to delete resource: %v", err)
+}
+`,
     },
       {
       language: "rust",
       label: "Rust",
       code:`let resource = Resource::new("resource-1".to_string(), "My Resource".to_string());
 service.create_resource(&resource, &token).await?;
+service.delete_resource("resource-123", &token).await?;
 println!("Resource created successfully");`
     },
     {
@@ -355,6 +362,12 @@ try:
     print("Resource created successfully")
 except Exception as error:
     print(f"Failed to create resource: {error}")
+
+try:
+    service.delete_resource("resource-id", token)
+    print("Resource deleted successfully")
+except Exception as error:
+    print(f"Failed to delete resource: {error}")
 `
   },
     {
@@ -377,7 +390,15 @@ try {
   console.log('Resource created successfully');
 } catch (error) {
   console.error('Failed to create resource:', error);
-}`
+}
+
+try {
+  await sdk.deleteResource(resource, token);
+  console.log('Resource deleted successfully');
+} catch (error) {
+  console.error('Failed to delete resource:', error);
+}
+`
     }
   ]}
 />
