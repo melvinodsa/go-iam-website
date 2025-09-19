@@ -306,6 +306,12 @@ const SidebarContent: React.FC<{
         label="Examples"
         pathname={"go-iam-examples"}
       />
+      <ResourceLink
+        href="https://www.reddit.com/r/GoIAM/"
+        icon="reddit"
+        label="Reddit Community"
+        pathname={"reddit-community"}
+      />
     </Column>
   );
 

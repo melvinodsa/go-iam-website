@@ -153,6 +153,7 @@ const schema = {
 // social links
 const social = {
   github: "https://github.com/melvinodsa/go-iam",
+  reddit: "https://www.reddit.com/r/GoIAM/",
   docs: `${baseURL}/docs`,
 };
 

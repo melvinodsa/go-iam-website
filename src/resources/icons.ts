@@ -33,6 +33,7 @@ import { TbApi } from "react-icons/tb";
 import { DiGoogleCloudPlatform } from "react-icons/di";
 import { VscAzure } from "react-icons/vsc";
 import { GrDeploy } from "react-icons/gr";
+import { FaReddit } from "react-icons/fa";
 
 
 
@@ -61,6 +62,7 @@ export const iconLibrary: Record<string, IconType> = {
   aws: FaAws,
   azure: VscAzure,
   deploy: GrDeploy,
+  reddit: FaReddit,
 };
 
 

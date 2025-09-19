@@ -92,6 +92,7 @@ pnpm build:static
 > 📦 **SDK**: [go-iam-sdk](https://github.com/melvinodsa/go-iam-sdk)  
 > 🚀 **Examples**: [go-iam-examples](https://github.com/melvinodsa/go-iam-examples)  
 > 🌐 **Website**: [go-iam-website](https://github.com/melvinodsa/go-iam-website)
+> 💬 Reddit Community: [r/GoIAM](https://www.reddit.com/r/GoIAM/)
 
 ---
 

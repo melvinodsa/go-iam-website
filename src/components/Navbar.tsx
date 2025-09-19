@@ -141,6 +141,15 @@ function Navbar({ navigationItems }: { navigationItems: NavigationItem[] }) {
                             Docs
                         </Button>
                         <Button
+                            href={social.reddit}
+                            variant="tertiary"
+                            size="s"
+                            prefixIcon="reddit"
+                            target="_blank"
+                        >
+                            Reddit Community
+                        </Button>
+                        <Button
                             href={social.github}
                             variant="tertiary"
                             size="s"
