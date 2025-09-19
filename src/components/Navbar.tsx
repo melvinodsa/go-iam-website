@@ -2,7 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
-import { Button, Fade, Flex, Logo, NavIcon, Row, Kbar, useTheme } from "@once-ui-system/core";
+import { Button, Fade, Flex, Logo, NavIcon, Row, Kbar, useTheme, Column } from "@once-ui-system/core";
 import { layout, routes, social } from "@/resources/once-ui.config";
 import { NavigationItem } from "./Sidebar";
 
@@ -110,7 +110,7 @@ function Navbar({ navigationItems }: { navigationItems: NavigationItem[] }) {
     return (
         <>
             <Flex as="header" horizontal="center" position="sticky" top="0" zIndex={9} fillWidth vertical="center" paddingY="12" paddingX="l">
-                <Row maxWidth={layout.header.width} vertical="center" horizontal="between" gap="l" style={{
+                <Column maxWidth={layout.header.width} vertical="center" horizontal="between" gap="l" style={{
                     position: "fixed",
                     top: '20px',
                     zIndex: 1000,
@@ -119,7 +119,7 @@ function Navbar({ navigationItems }: { navigationItems: NavigationItem[] }) {
                     justifyContent: "space-between",
                     alignItems: "center"
                 }}>
-                    <Row marginLeft="128" m={{ margin: '0' }} fillWidth vertical="center" gap="8">
+                    <Row fillWidth vertical="center" horizontal="center" gap="8">
                         <Logo className="dark-flex" wordmark="/trademarks/wordmark-dark.svg" size="s" href="/" />
                         <Logo className="light-flex" wordmark="/trademarks/wordmark-light.svg" size="s" href="/" />
                     </Row>
@@ -159,7 +159,7 @@ function Navbar({ navigationItems }: { navigationItems: NavigationItem[] }) {
                             GitHub
                         </Button>
                     </Row>
-                </Row>
+                </Column>
             </Flex>
         </>
     );

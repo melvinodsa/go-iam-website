@@ -13,44 +13,38 @@ const Footer = () => {
             padding="s"
             background="neutral-weak"
             borderTop="neutral-alpha-weak"
+            horizontal="center"
         >
-            <Row
-                fillWidth
-                maxWidth="xl"
-                horizontal="center"
-                style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}
-            >
-                <Text variant="body-default-s" onBackground="neutral-weak" size="xs">
-                    © 2025 Go IAM. Open source under Apache 2.0 License.
-                </Text>
-                <Row gap="m">
-                    <Button
-                        href={social.docs}
-                        variant="tertiary"
-                        size="s"
-                        prefixIcon="book"
-                    >
-                        Docs
-                    </Button>
-                    <Button
-                        href={social.reddit}
-                        variant="tertiary"
-                        size="s"
-                        prefixIcon="reddit"
-                    >
-                        Reddit Community
-                    </Button>
-                    <Button
-                        href={social.github}
-                        variant="tertiary"
-                        size="s"
-                        prefixIcon="github"
-                        target="_blank"
-                    >
-                        GitHub
-                    </Button>
-                </Row>
+            <Row gap="m">
+                <Button
+                    href={social.docs}
+                    variant="tertiary"
+                    size="s"
+                    prefixIcon="book"
+                >
+                    Docs
+                </Button>
+                <Button
+                    href={social.reddit}
+                    variant="tertiary"
+                    size="s"
+                    prefixIcon="reddit"
+                >
+                    Reddit Community
+                </Button>
+                <Button
+                    href={social.github}
+                    variant="tertiary"
+                    size="s"
+                    prefixIcon="github"
+                    target="_blank"
+                >
+                    GitHub
+                </Button>
             </Row>
+            <Text variant="body-default-s" onBackground="neutral-weak" size="xs">
+                © 2025 Go IAM. Open source under Apache 2.0 License.
+            </Text>
         </Column >
     );
 };
