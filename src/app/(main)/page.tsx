@@ -105,6 +105,17 @@ export default function Home() {
             >
               View on GitHub
             </Button>
+            <Button
+              href="https://www.onlydust.com/repositories/melvinodsa/go-iam"
+              variant="tertiary"
+              data-border="rounded"
+              prefixIcon="users"
+              weight="strong"
+              size="l"
+              target="_blank"
+            >
+              Contribute on OnlyDust
+            </Button>
           </Row>
         </Column>
       </Column>
