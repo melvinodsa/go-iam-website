@@ -1,0 +1,38 @@
+---
+title: "Authentication Strategies"
+updatedAt: "2025-09-10"
+summary: "Overview of Go IAM authentication methods including OAuth, SAML, and JWT."
+navLabel: "auth"
+navIcon: "key"
+image: "/images/blog/auth-strategies.webp"
+---
+
+# Authentication Strategies in Go IAM
+
+![Auth Strategies](/images/blog/auth-strategies.webp)
+
+Go IAM provides multiple ways to authenticate users securely. This guide covers **OAuth2**, **SAML**, and **JWT-based authentication**.
+
+## 🔑 OAuth2
+
+OAuth2 allows applications to access user resources without exposing credentials. Go IAM supports:
+
+- **Authorization Code Flow** - Recommended for web apps
+- **Implicit Flow** - For single-page apps
+- **Client Credentials Flow** - For server-to-server communication
+
+## 🏷️ SAML
+
+SAML enables **Single Sign-On (SSO)** across multiple applications. With Go IAM:
+
+- Users log in once to access multiple services
+- Identity Providers (IdP) and Service Providers (SP) are easily configurable
+- Supports enterprise integrations like Active Directory and Okta
+
+## 🔒 JWT
+
+JWT tokens are compact, URL-safe, and used for **API authentication**:
+
+- Tokens contain user info and roles
+- Easily verified with Go IAM public keys
+- Expiration and refresh strategies supported

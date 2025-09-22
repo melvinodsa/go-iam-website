@@ -25,7 +25,7 @@ import { GiTrafficLightsReadyToGo } from "react-icons/gi";
 
 import { TbSdk } from "react-icons/tb";
 import { GrUserAdmin } from "react-icons/gr";
-import { FaGolang, FaShieldHalved } from "react-icons/fa6";
+import { FaGolang, FaShieldHalved, FaSquarePen } from "react-icons/fa6";
 import { SiTypescript } from "react-icons/si";
 import { IoLayers } from "react-icons/io5";
 import { FcDeployment } from "react-icons/fc";
@@ -34,6 +34,7 @@ import { DiGoogleCloudPlatform } from "react-icons/di";
 import { VscAzure } from "react-icons/vsc";
 import { GrDeploy } from "react-icons/gr";
 import { FaReddit } from "react-icons/fa";
+import { FaKey } from "react-icons/fa";
 
 
 
@@ -42,6 +43,8 @@ export const iconLibrary: Record<string, IconType> = {
   docker: FaDocker,
   server: GoServer,
   book: FaBook,
+  pen: FaSquarePen,
+  key: FaKey,
   github: FaGithub,
   tools: FaTools,
   ready: GiTrafficLightsReadyToGo,

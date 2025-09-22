@@ -141,6 +141,14 @@ function Navbar({ navigationItems }: { navigationItems: NavigationItem[] }) {
                             Docs
                         </Button>
                         <Button
+                            href={social.blog}
+                            prefixIcon="pen"
+                            variant="secondary"
+                            size="s"
+                        >
+                            Blog
+                        </Button>
+                        <Button
                             href={social.reddit}
                             variant="tertiary"
                             size="s"
