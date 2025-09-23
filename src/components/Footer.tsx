@@ -25,6 +25,14 @@ const Footer = () => {
                     Docs
                 </Button>
                 <Button
+                    href={social.blog}
+                    variant="tertiary"
+                    size="s"
+                    prefixIcon="pen"
+                >
+                    Blog
+                </Button>
+                <Button
                     href={social.reddit}
                     variant="tertiary"
                     size="s"
