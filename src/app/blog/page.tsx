@@ -11,7 +11,8 @@ export default async function BlogPage() {
       <Row>
         <Column
           as="main"
-          maxWidth={layout.content.width}
+          maxWidth={layout.bloglist.width}
+          minWidth={layout.bloglist.minWidth}
           gap="l"
           paddingBottom="xl"
           overflow="auto"
@@ -23,41 +24,47 @@ export default async function BlogPage() {
           </Column>
           <Column gap="m">
             {posts.map((post) => (
-              <Link key={post.slug} href={`/blog/${post.slug}`}>
-                <Row
-                  gap="m"
-                  fillWidth
-                  paddingY="s"
-                  style={{ cursor: "pointer" }}
-                >
-                  <Column gap="4" fillWidth>
-                    <Heading variant="heading-strong-m">
-                      {post.metadata.title}
-                    </Heading>
-                    <Text variant="body-default-s" onBackground="neutral-weak">
-                      {new Date(post.metadata.date).toLocaleDateString()}
-                    </Text>
-                    <Text
-                      variant="body-default-s"
-                      onBackground="neutral-medium"
-                    >
-                      {post.metadata.summary}
-                    </Text>
-                  </Column>
-                  {post.metadata.image && (
-                    <img
-                      src={post.metadata.image}
-                      alt={post.metadata.title}
-                      style={{
-                        width: "80px",
-                        height: "50px",
-                        objectFit: "cover",
-                        borderRadius: "8px",
-                      }}
-                    />
-                  )}
-                </Row>
-              </Link>
+              <article key={post.slug}>
+                <Link href={`/blog/${post.slug}`}>
+                  <Row
+                    gap="m"
+                    fillWidth
+                    paddingY="s"
+                    style={{ cursor: "pointer" }}
+                  >
+                    <Column gap="4" fillWidth>
+                      <Heading as="h2" variant="heading-strong-m">
+                        {post.metadata.title}
+                      </Heading>
+                      <Text
+                        variant="body-default-s"
+                        onBackground="neutral-weak"
+                      >
+                        {new Date(post.metadata.date).toLocaleDateString()}
+                      </Text>
+                      <Text
+                        variant="body-default-s"
+                        onBackground="neutral-medium"
+                      >
+                        {post.metadata.summary}
+                      </Text>
+                    </Column>
+                    {post.metadata.image && (
+                      <img
+                        src={post.metadata.image}
+                        alt={post.metadata.title}
+                        style={{
+                          width: "80px",
+                          height: "50px",
+                          objectFit: "cover",
+                          borderRadius: "8px",
+                        }}
+                        loading="lazy"
+                      />
+                    )}
+                  </Row>
+                </Link>
+              </article>
             ))}
           </Column>
         </Column>

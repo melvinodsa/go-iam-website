@@ -42,6 +42,7 @@ export interface BlogNavigationItem
 interface BlogSidebarProps
   extends Omit<React.ComponentProps<typeof Flex>, "children"> {
   initialNavigation: BlogNavigationItem[];
+  posts: { slug: string; title: string; date: string }[];
 }
 
 // Memoized navigation item component to prevent re-renders
@@ -49,15 +50,15 @@ const BlogNavigationItemComponent: React.FC<{
   item: BlogNavigationItem;
   depth: number;
   pathname: string;
-  renderNavigation: (items: BlogNavigationItem[], depth: number) => React.ReactNode;
+  renderNavigation: (
+    items: BlogNavigationItem[],
+    depth: number
+  ) => React.ReactNode;
 }> = ({ item, depth, pathname, renderNavigation }) => {
   const correctedSlug = item.slug;
 
-  // Extract the path segments for better matching
   const pathSegments = pathname.split("/").filter(Boolean);
 
-  // For top-level directories, check if their name is in the pathname segments
-  // This will match routes like "/once-ui/quick-start" for the "once-ui" parent
   const isTopLevelMatch =
     depth === 0 &&
     pathSegments.length >= 2 &&
@@ -68,21 +69,16 @@ const BlogNavigationItemComponent: React.FC<{
   const isExactMatch = pathname === `/${correctedSlug}`;
   const isParentPath = pathname.startsWith(`/${correctedSlug}/`);
 
-  // Only consider exact matches for selection, not parent paths
   const isSelected = isExactMatch;
 
   // Use this for accordion open state - if it's a parent or exact match
   const isActive = isExactMatch || isParentPath || isTopLevelMatch;
 
-  // Check if the current path is within this section by comparing path segments
-  // This is more reliable for deeper nested routes
   const isPathWithinSection = (() => {
-    // Skip this check for empty paths
     if (!correctedSlug) return false;
 
     const sectionSegments = correctedSlug.split("/").filter(Boolean);
 
-    // If there aren't enough segments in the path, it can't be within this section
     if (pathSegments.length < sectionSegments.length) return false;
 
     // Check if all section segments match the corresponding path segments
@@ -202,16 +198,13 @@ const BlogNavigationItemComponent: React.FC<{
   );
 };
 
-// Add display name and memoize with a less aggressive comparison function
 const BlogNavigationItem = React.memo(
   BlogNavigationItemComponent,
   (prevProps, nextProps) => {
-    // Always re-render if the pathname changes - this is critical for active state updates
     if (prevProps.pathname !== nextProps.pathname) {
-      return false; // Different pathname means we should re-render
+      return false;
     }
 
-    // Otherwise, only re-render if the item itself changes
     return prevProps.item === nextProps.item;
   }
 );
@@ -247,16 +240,13 @@ const ResourceLinkComponent: React.FC<{
   );
 };
 
-// Add display name and memoize with a less aggressive comparison function
 const ResourceLink = React.memo(
   ResourceLinkComponent,
   (prevProps, nextProps) => {
-    // Always re-render if the pathname changes - this is critical for active state updates
     if (prevProps.pathname !== nextProps.pathname) {
-      return false; // Different pathname means we should re-render
+      return false;
     }
 
-    // Otherwise, only re-render if the href or icon changes
     return (
       prevProps.href === nextProps.href && prevProps.icon === nextProps.icon
     );
@@ -265,13 +255,28 @@ const ResourceLink = React.memo(
 
 ResourceLink.displayName = "ResourceLink";
 
-// Create a stable version of the sidebar that doesn't re-render
 const BlogSidebarContent: React.FC<{
   blogNavigation: BlogNavigationItem[];
   pathname: string;
+  posts: { slug: string; title: string; date: string }[];
 }> = React.memo(
-  ({ blogNavigation, pathname }) => {
-    // Create a render function that captures the current pathname
+  ({ blogNavigation, pathname, posts }) => {
+    const groupedByMonth = useMemo(() => {
+      if (!posts) return {};
+
+      return posts.reduce((acc, post) => {
+        const date = new Date(post.date);
+        const key = date.toLocaleString("en-US", {
+          month: "long",
+          year: "numeric",
+        });
+
+        if (!acc[key]) acc[key] = [];
+        acc[key].push(post);
+        return acc;
+      }, {} as Record<string, typeof posts>);
+    }, [posts]);
+
     const renderNavigation = (items: BlogNavigationItem[], depth = 0) => {
       return (
         <>
@@ -288,7 +293,51 @@ const BlogSidebarContent: React.FC<{
       );
     };
 
-    // Create resources section
+    
+    // Monthly archive
+    const monthlyArchive = (
+      <Column gap="1" marginTop="16" paddingLeft="4">
+        <Row
+          textVariant="label-strong-s"
+          onBackground="brand-strong"
+          paddingLeft="8"
+          paddingY="12"
+        >
+          By Month
+        </Row>
+
+        {Object.entries(groupedByMonth).map(([month, monthPosts]) => (
+          <Accordion
+          key={month}
+          gap="2"
+          icon="chevronRight"
+          iconRotation={90}
+          size="s"
+          radius="s"
+          paddingLeft="4"
+          paddingTop="4"
+          title={
+            <Row textVariant="label-strong-s" onBackground="neutral-medium">
+                {month}
+              </Row>
+            }
+            >
+            {monthPosts.map((p) => (
+              <ToggleButton
+              key={p.slug}
+              href={`/blog/${p.slug}`}
+              fillWidth
+              horizontal="between"
+              >
+                <Row gap="8">{p.title}</Row>
+              </ToggleButton>
+            ))}
+          </Accordion>
+        ))}
+      </Column>
+    );
+    
+    // Resources section
     const resourcesSection = (
       <Column gap="1" marginTop="16" paddingLeft="4">
         <Row
@@ -325,18 +374,25 @@ const BlogSidebarContent: React.FC<{
 
     return (
       <>
+        <Column gap="1" marginTop="16" paddingLeft="4">
+          <ResourceLink
+            href="/blog"
+            icon="pen"
+            label="All blogs"
+            pathname="blog"
+          />
+        </Column>
         {renderNavigation(blogNavigation, 0)}
+        {monthlyArchive}
         {resourcesSection}
       </>
     );
   },
   (prevProps, nextProps) => {
-    // Always re-render if pathname changes
     if (prevProps.pathname !== nextProps.pathname) {
-      return false; // Different pathname means we should re-render
+      return false;
     }
 
-    // Otherwise, only re-render if navigation changes
     return prevProps.blogNavigation === nextProps.blogNavigation;
   }
 );
@@ -345,6 +401,7 @@ BlogSidebarContent.displayName = "SidebarContent";
 
 const BlogSidebar: React.FC<BlogSidebarProps> = ({
   initialNavigation,
+  posts,
   ...rest
 }) => {
   const [blogSidebarVisible, setBlogSidebarVisible] = useState(false);
@@ -445,6 +502,7 @@ const BlogSidebar: React.FC<BlogSidebarProps> = ({
             key={pathname}
             blogNavigation={blogNavigation}
             pathname={pathname}
+            posts={posts}
           />
         )}
       </Column>
@@ -452,10 +510,7 @@ const BlogSidebar: React.FC<BlogSidebarProps> = ({
   );
 };
 
-// Use a custom comparison function for the entire Sidebar component
 const MemoizedBlogSidebar = React.memo(BlogSidebar, (prevProps, nextProps) => {
-  // Only re-render if the initialNavigation changes
-  // The component will re-render when pathname changes via usePathname hook internally
   return prevProps.initialNavigation === nextProps.initialNavigation;
 });
 

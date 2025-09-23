@@ -174,6 +174,10 @@ const layout = {
     width: 60, // width of the main content block
     minWidth: 42,
   },
+  bloglist: {
+    width: 60, // width of the blog list
+    minWidth: 50,
+  },
   blog_content: {
     width: 60, // width of the main content block
     minWidth: 60,

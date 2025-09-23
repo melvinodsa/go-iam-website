@@ -14,6 +14,7 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import getBlogNavigation from '../utils/getBlogNavigation';
 import { BlogSidebar } from '@/components/BlogSidebar';
+import { getBlogPosts } from "@/app/utils/blog";
 
 export async function generateMetadata() {
   return Meta.generate({
@@ -34,6 +35,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   const blogNavigationItems = getBlogNavigation();
+  const posts = getBlogPosts();
+
+  const sidebarPosts = posts.map((p) => ({
+    slug: p.slug,
+    title: p.metadata.title,
+    date: p.metadata.date || p.metadata.updatedAt,
+  }));
+
   return (
     <Flex
       suppressHydrationWarning
@@ -120,7 +129,7 @@ export default function RootLayout({
       <Providers>
         <Column as="body" background="page" fillWidth margin="0" padding="0">
           <Navbar navigationItems={blogNavigationItems} />
-          <Row marginTop="64" style={{ height: "calc(100vh - var(--static-space-64) - var(--static-space-12) - (var(--responsive-space-m)*3))" }} horizontal="start">
+          <Row marginTop='56' style={{ height: "calc(100vh - var(--static-space-64) - var(--static-space-12) - (var(--responsive-space-m)*3))" }} horizontal="start">
             <BlogSidebar
               maxWidth={100}
               style={{ height: "calc(100vh - var(--static-space-64)*2)", borderTop: "0", borderRight: "0" }}
@@ -130,6 +139,7 @@ export default function RootLayout({
               top="64"
               zIndex={9}
               initialNavigation={blogNavigationItems}
+              posts={sidebarPosts}
             />
             {children}
           </Row>

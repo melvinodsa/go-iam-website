@@ -10,6 +10,7 @@ function Navbar({ navigationItems }: { navigationItems: NavigationItem[] }) {
     const [isMac, setIsMac] = useState(false);
     const pathname = usePathname();
     const isDocsPage = pathname.startsWith('/docs');
+    const isBlogPage = pathname.startsWith('/blog');
 
     useEffect(() => {
         setIsMac(navigator.userAgent.toLowerCase().indexOf('mac') !== -1);
@@ -41,7 +42,7 @@ function Navbar({ navigationItems }: { navigationItems: NavigationItem[] }) {
                     section: "Documentation",
                     shortcut: [],
                     keywords: keywords,
-                    href: `/docs/${correctedSlug}`,
+                    href: `${isBlogPage ? '/blog' : '/docs'}/${correctedSlug}`,
                     icon: item.navIcon || "book",
                 });
             }
@@ -109,21 +110,19 @@ function Navbar({ navigationItems }: { navigationItems: NavigationItem[] }) {
 
     return (
         <>
-            <Flex as="header" horizontal="center" position="sticky" top="0" zIndex={9} fillWidth vertical="center" paddingY="12" paddingX="l">
-                <Column maxWidth={layout.header.width} vertical="center" horizontal="between" gap="l" style={{
+            <Flex as="header" position="sticky" top="0" zIndex={9} fillWidth paddingY="8" paddingX="l">
+                <Row maxWidth={layout.header.width} fillWidth horizontal="center" gap="80" vertical="center" style={{
                     position: "fixed",
-                    top: '20px',
+                    top: '12px',
+                    left: '50%',
+                    transform: 'translateX(-50%)',
                     zIndex: 1000,
                     backdropFilter: "blur(8px)",
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center"
                 }}>
-                    <Row fillWidth vertical="center" horizontal="center" gap="8">
-                        <Logo className="dark-flex" wordmark="/trademarks/wordmark-dark.svg" size="s" href="/" />
-                        <Logo className="light-flex" wordmark="/trademarks/wordmark-light.svg" size="s" href="/" />
-                    </Row>
-                    {isDocsPage && <Kbar items={kbar} radius="full" background="neutral-alpha-weak">
+                    <Logo className="dark-flex" wordmark="/trademarks/wordmark-dark.svg" size="s" href="/" />
+                    <Logo className="light-flex" wordmark="/trademarks/wordmark-light.svg" size="s" href="/" />
+                    
+                    {(isDocsPage || isBlogPage) && <Kbar items={kbar} radius="full" background="neutral-alpha-weak">
                         <Button data-border="rounded" size="s" variant="tertiary" weight="default">
                             <Row vertical="center" gap="16" style={{ marginLeft: '-0.5rem' }} paddingRight="8">
                                 <Row background="neutral-alpha-medium" paddingX="8" paddingY="4" radius="full" data-scaling="90" textVariant="body-default-xs" onBackground="neutral-medium">{isMac ? 'Cmd' : 'Ctrl'} k</Row>
@@ -131,7 +130,8 @@ function Navbar({ navigationItems }: { navigationItems: NavigationItem[] }) {
                             </Row>
                         </Button>
                     </Kbar>}
-                    <Row gap="m" style={{ display: "flex", alignItems: "center" }}>
+                    
+                    <Row gap="s" vertical="center">
                         <Button
                             href={social.docs}
                             prefixIcon="book"
@@ -167,7 +167,7 @@ function Navbar({ navigationItems }: { navigationItems: NavigationItem[] }) {
                             GitHub
                         </Button>
                     </Row>
-                </Column>
+                </Row>
             </Flex>
         </>
     );

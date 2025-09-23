@@ -102,8 +102,8 @@ export default async function BlogPost({
                     href={`/blog/${prevPost.slug}`}
                     radius="l"
                     paddingX="16"
-                    marginLeft="16" // ✅ add left margin
-                    marginRight="16" // ✅ add right margin
+                    marginLeft="16"
+                    marginRight="16"
                   >
                     <Icon
                       name="chevronLeft"
