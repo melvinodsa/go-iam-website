@@ -1,31 +1,139 @@
 ---
-title: "Basics of Blog"
-date: "2025-08-24"
-summary: "Detailed explanation of Go IAM's multi-tenant architecture, authentication, and authorization systems."
+title: "Why Go IAM?"
+date: "2025-09-24"
+summary: "Explains the origins and motivations behind building Go IAM, focusing on real-world challenges in authentication and authorization."
 navLabel: "details"
 navIcon: "book"
-image: "/images/blog/blog-image.jpg"
+image: "/images/og/home.png"
 ---
 
-# Go IAM Fundamentals
+![Why Go IAM](/images/og/home.png)
 
-![Auth Strategies](/images/blog/blog-image.jpg)
+## The Origins ✨
 
-Go IAM is a comprehensive **multi-tenant** Identity and Access Management system designed to provide flexible authentication and authorization for modern applications. This guide explains the core concepts and architecture that make Go IAM powerful and scalable.
+I’ve been building authentication and authorization systems across almost every startup I’ve worked at since 2019. During my time at [Dezerv](https://www.dezerv.in), I faced one particularly interesting challenge.  
 
-## 🏢 Multi-Tenant Architecture
+Internal employees needed access to certain dashboards, but the **same API** had to return **different results to different users** based on their access level. 🔑  
 
-**Everything in Go IAM is multi-tenant by design.** This means you can easily create isolated environments called **projects**, where each project maintains its own separate ecosystem of:
+For example:  
 
-- 🔐 **Auth Providers** - External authentication systems
-- 👥 **Clients** - Your applications that need authentication
-- 👤 **Users** - People who access your applications
-- 🎭 **Roles** - Permission groups for users
-- 📦 **Resources** - Protected items in your system
+- 👤 A **Relationship Manager (RM)** looking at onboarding applications should only see the leads they manage—not the ones owned by other RMs.  
+- 🔄 The **`/v1/leads` API** should return filtered results tailored for each RM.  
+- 👥 A **Team Manager** should see the *union* of applications from all their RMs, but with restricted visibility—some columns hidden, while RMs could still see them.  
 
-Each project operates in complete isolation, ensuring that data and configurations from one project never interfere with another. This makes Go IAM perfect for:
+Most developers solve this by writing custom RBAC logic directly into the application. But as soon as organizational hierarchies shift, that logic starts breaking and becomes painful to maintain. 🥴
 
-- **SaaS providers** serving multiple customers
-- **Enterprise organizations** with multiple departments
-- **Development teams** managing multiple applications
-- **Agencies** handling various client projects
+---
+
+### Early Go IAM Experiments ⚙️
+
+The first versions of **Go IAM** (closed-source back then) were built around a simple principle:  
+
+**Anything that needs access control is a resource.**  
+
+- 📦 Resources could be grouped into roles.  
+- 🔗 Roles could be attached to users.  
+- 🗂️ Resources could have keys—static or dynamic (e.g., `@data/application/71873`).  
+
+This let applications offload access logic to the IAM layer instead of reinventing RBAC inside their codebase. However, one big learning emerged: applications still needed to **programmatically create resources and attach them to users**. This coupling exposed the limits of the early design, and paved the way for the open-source version of **Go IAM**. 🚀
+
+---
+
+### When IAM Saved the Day 🛡️  
+
+There was one incident where IAM quite literally saved us. While testing our **Systematic Investment Plan (SIP)** feature, a bug caused the application to start sending **infinite one-time passwords (OTPs)** via SMS. 📲💥  
+
+With a quick action, we disabled the **SMS OTP permission** for the SIP service account directly through the IAM system. This immediately stopped the flood.  
+
+That moment underscored an important lesson:  
+👉 You can never place blind trust in client applications not to make mistakes. IAM acts as a safety net when things go wrong.  
+
+## The Present 🔍
+
+At [Metadome](https://www.metadome.ai/), we implemented **Go IAM** once again. This time, one of the biggest pain points from earlier experiments was solved:  
+
+⚡ **No more manually attaching resources to roles and users.**  
+
+Instead, **policies** automated the process:  
+
+- 📝 Any resource a user creates is automatically added to their access list.  
+- 🎯 Policies could also assign resources to specific users or roles.  
+- 👨‍💻 This made it easy for testers to create application records even in production, while customers could simply be assigned a pre-created role.  
+
+This shift from programmatic assignments to policy-driven automation drastically simplified the developer experience and reduced the chances of errors. 🚀
+
+---
+
+### IAM Meets AI 🤖
+
+Another fascinating use case appeared when we opened up our infrastructure to AI.  
+
+We were testing an **LLM-powered chatbot** and asked it to show cars of different colors. Harmless, right? But then, due to hallucination, the chatbot suddenly triggered a **service booking flow** through a tool call (via MCP). 😅  
+
+Luckily, nothing harmful happened—the user never went through with completing the booking. But the incident made us ask an important *what if*:  
+
+👉 What if the tool call had been something more sensitive, like **updating or deleting records in the database**?  
+
+That’s when the power of IAM became even more obvious. Imagine if IAM could **dynamically provision access** for both the user and the bot based on the conversation context. 🛡️  
+
+This idea hints at the next frontier: IAM systems that don’t just enforce static policies but adapt in real-time to dynamic, AI-driven interactions.  
+
+## The Future 🚀
+
+As AI agents and LLMs continue to become integral to applications, security challenges grow in ways traditional RBAC and IAM were never designed to handle.  
+
+An AI agent is not just *another user* — it can:  
+- 🔄 Call APIs on behalf of humans.  
+- 🧩 Chain multiple tools together (MCP, plugins, services).  
+- 📦 Access sensitive data sources like PII, internal APIs, or even databases.  
+
+This makes **access control the last line of defense** when things go wrong.  
+
+---
+
+### Controlling the MCP Layer ⚙️
+
+The **Model Context Protocol (MCP)** allows LLMs to call tools and interact with external systems. But here’s the risk: hallucinations or prompt injection can push the agent to trigger actions that weren’t intended.  
+
+IAM can help by:  
+- 🔐 Restricting which tools an agent is allowed to call.  
+- 🛑 Blocking unsafe actions (like database writes or deletes) unless explicitly provisioned.  
+- ⏱️ Dynamically granting short-lived permissions based on conversation context.  
+
+This ensures the agent can only operate inside a *safe sandbox*, even when it’s unpredictable.  
+
+---
+
+### Protecting the PII Layer 🛡️
+
+LLMs often need access to Personally Identifiable Information (PII) to be useful — but this data is highly sensitive.  
+
+IAM can:  
+- 🎯 Enforce policies so agents see only the data they *absolutely need*.  
+- 🕵️ Redact or mask fields (e.g., hide phone numbers or partial email IDs) depending on the user’s role.  
+- 📊 Control column- or row-level access so no single query leaks more than intended.  
+
+By layering IAM into the PII access pipeline, we create a **zero-trust boundary** between agents and sensitive data.  
+
+---
+
+### Securing Other AI Security Layers 🧩
+
+Beyond MCP and PII, IAM can extend into other layers of the AI stack:  
+
+- 🛂 **Tool Access** → Only authorized workflows should trigger certain high-risk tools (like payments, account updates, or deletion APIs).  
+- 📡 **External APIs** → IAM can act as a gatekeeper, ensuring AI agents only call APIs they’re explicitly allowed to.  
+- 🔄 **Dynamic Access Provisioning** → Just-in-time policies that grant access for the duration of a session or conversation, and then expire automatically.  
+
+---
+
+### The Next Step for Go IAM 🌐
+
+The future of **Go IAM** is about more than static RBAC. It’s about:  
+
+- Context-aware, **real-time access control** for agents and LLMs.  
+- A single IAM layer that spans **human users, bots, and AI systems**.  
+- Security that is **adaptive, not hardcoded**.  
+
+In a world where AI is becoming a first-class actor in our systems, IAM is the layer that ensures **safety, trust, and control**.  
+
