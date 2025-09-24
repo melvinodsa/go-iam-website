@@ -1,0 +1,31 @@
+---
+title: "Basics of Blog"
+date: "2025-08-24"
+summary: "Detailed explanation of Go IAM's multi-tenant architecture, authentication, and authorization systems."
+navLabel: "details"
+navIcon: "book"
+image: "/images/blog/blog-image.jpg"
+---
+
+# Go IAM Fundamentals
+
+![Auth Strategies](/images/blog/blog-image.jpg)
+
+Go IAM is a comprehensive **multi-tenant** Identity and Access Management system designed to provide flexible authentication and authorization for modern applications. This guide explains the core concepts and architecture that make Go IAM powerful and scalable.
+
+## 🏢 Multi-Tenant Architecture
+
+**Everything in Go IAM is multi-tenant by design.** This means you can easily create isolated environments called **projects**, where each project maintains its own separate ecosystem of:
+
+- 🔐 **Auth Providers** - External authentication systems
+- 👥 **Clients** - Your applications that need authentication
+- 👤 **Users** - People who access your applications
+- 🎭 **Roles** - Permission groups for users
+- 📦 **Resources** - Protected items in your system
+
+Each project operates in complete isolation, ensuring that data and configurations from one project never interfere with another. This makes Go IAM perfect for:
+
+- **SaaS providers** serving multiple customers
+- **Enterprise organizations** with multiple departments
+- **Development teams** managing multiple applications
+- **Agencies** handling various client projects

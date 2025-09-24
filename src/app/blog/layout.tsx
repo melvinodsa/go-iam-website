@@ -12,8 +12,9 @@ import { Meta, Schema, Column, Flex, opacity, SpacingToken, Background, Row, Hea
 import { Providers } from '@/components/Providers';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import { Sidebar } from '@/components/Sidebar';
-import getNavigation from '../utils/getNavigation';
+import getBlogNavigation from '../utils/getBlogNavigation';
+import { BlogSidebar } from '@/components/BlogSidebar';
+import { getBlogPosts } from "@/app/utils/blog";
 
 export async function generateMetadata() {
   return Meta.generate({
@@ -33,7 +34,15 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const navigationItems = getNavigation();
+  const blogNavigationItems = getBlogNavigation();
+  const posts = getBlogPosts();
+
+  const sidebarPosts = posts.map((p) => ({
+    slug: p.slug,
+    title: p.metadata.title,
+    date: p.metadata.date || p.metadata.updatedAt,
+  }));
+
   return (
     <Flex
       suppressHydrationWarning
@@ -119,9 +128,9 @@ export default function RootLayout({
       </head>
       <Providers>
         <Column as="body" background="page" fillWidth margin="0" padding="0">
-          <Navbar navigationItems={navigationItems} />
+          <Navbar navigationItems={blogNavigationItems} />
           <Row marginTop='56' style={{ height: "calc(100vh - var(--static-space-64) - var(--static-space-12) - (var(--responsive-space-m)*3))" }} horizontal="start">
-            <Sidebar
+            <BlogSidebar
               maxWidth={100}
               style={{ height: "calc(100vh - var(--static-space-64)*2)", borderTop: "0", borderRight: "0" }}
               padding="8"
@@ -129,7 +138,8 @@ export default function RootLayout({
               s={{ style: { marginLeft: '0' } }}
               top="64"
               zIndex={9}
-              initialNavigation={navigationItems}
+              initialNavigation={blogNavigationItems}
+              posts={sidebarPosts}
             />
             {children}
           </Row>

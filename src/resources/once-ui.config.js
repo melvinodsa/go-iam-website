@@ -155,6 +155,7 @@ const social = {
   github: "https://github.com/melvinodsa/go-iam",
   reddit: "https://www.reddit.com/r/GoIAM/",
   docs: `${baseURL}/docs`,
+  blog: `${process.env.NEXT_PUBLIC_BASE_URL}/blog`,
 };
 
 const layout = {
@@ -172,6 +173,14 @@ const layout = {
   content: {
     width: 60, // width of the main content block
     minWidth: 42,
+  },
+  bloglist: {
+    width: 60, // width of the blog list
+    minWidth: 50,
+  },
+  blog_content: {
+    width: 60, // width of the main content block
+    minWidth: 60,
   },
   sideNav: {
     width: 17, // width of the sideNav on document pages
