@@ -293,7 +293,7 @@ const BlogSidebarContent: React.FC<{
       );
     };
 
-    
+
     // Monthly archive
     const monthlyArchive = (
       <Column gap="1" marginTop="16" paddingLeft="4">
@@ -308,26 +308,26 @@ const BlogSidebarContent: React.FC<{
 
         {Object.entries(groupedByMonth).map(([month, monthPosts]) => (
           <Accordion
-          key={month}
-          gap="2"
-          icon="chevronRight"
-          iconRotation={90}
-          size="s"
-          radius="s"
-          paddingLeft="4"
-          paddingTop="4"
-          title={
-            <Row textVariant="label-strong-s" onBackground="neutral-medium">
+            key={month}
+            gap="2"
+            icon="chevronRight"
+            iconRotation={90}
+            size="s"
+            radius="s"
+            paddingLeft="4"
+            paddingTop="4"
+            title={
+              <Row textVariant="label-strong-s" onBackground="neutral-medium">
                 {month}
               </Row>
             }
-            >
+          >
             {monthPosts.map((p) => (
               <ToggleButton
-              key={p.slug}
-              href={`/blog/${p.slug}`}
-              fillWidth
-              horizontal="between"
+                key={p.slug}
+                href={`/blog/${p.slug}`}
+                fillWidth
+                horizontal="between"
               >
                 <Row gap="8">{p.title}</Row>
               </ToggleButton>
@@ -336,7 +336,7 @@ const BlogSidebarContent: React.FC<{
         ))}
       </Column>
     );
-    
+
     // Resources section
     const resourcesSection = (
       <Column gap="1" marginTop="16" paddingLeft="4">
@@ -384,7 +384,7 @@ const BlogSidebarContent: React.FC<{
         </Column>
         {renderNavigation(blogNavigation, 0)}
         {monthlyArchive}
-        {resourcesSection}
+        {/* {resourcesSection} */}
       </>
     );
   },

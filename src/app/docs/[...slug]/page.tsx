@@ -64,8 +64,8 @@ export default async function Docs({
 
   return (
     <Row>
-      <Row minWidth={layout.content.minWidth}>
-        <Column as="main" maxWidth={layout.content.width} gap="l" paddingBottom="xl" overflow='auto' marginLeft='16' marginRight='16'>
+      <Row>
+        <Column as="main" gap="l" paddingBottom="xl" overflow='auto' marginLeft='16' marginRight='16'>
           <Schema
             as="techArticle"
             title={doc.metadata.title + " – " + schema.name}

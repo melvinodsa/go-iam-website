@@ -11,6 +11,7 @@ import {
   Card,
   Icon,
   Schema,
+  HeadingNav,
 } from "@once-ui-system/core";
 import { layout } from "@/resources/once-ui.config";
 
@@ -187,17 +188,12 @@ export default async function BlogPost({
         </Column>
       </Row>
 
-      {/* Sidebar (like Docs, but empty for now) */}
-      <Column
-        gap="16"
-        maxWidth={layout.sideNav.width}
-        m={{ hide: true }}
-        position="sticky"
-        top="80"
-        overflow="auto"
-        style={{ height: "calc(100vh - var(--static-space-80))" }}
-      >
-        {/* optional: categories, tags, related posts */}
+      <Column gap="16" maxWidth={layout.sideNav.width} m={{ hide: true }} position="sticky" top="80" overflow="auto" style={{ height: "calc(100vh - var(--static-space-80))" }}>
+        <Row gap="12" paddingLeft="2" vertical="center" onBackground="neutral-medium" textVariant="label-default-s">
+          <Icon name="book" size="xs" />
+          On this page
+        </Row>
+        <HeadingNav />
       </Column>
     </Row>
   );

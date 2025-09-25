@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { getBlogPosts } from "@/app/utils/blog";
-import { Heading, Text, Column, Row } from "@once-ui-system/core";
+import { Heading, Text, Column, Row, HeadingNav, Icon } from "@once-ui-system/core";
 import { layout } from "@/resources/once-ui.config";
 
 export default async function BlogPage() {
@@ -69,18 +69,6 @@ export default async function BlogPage() {
           </Column>
         </Column>
       </Row>
-
-      <Column
-        gap="16"
-        maxWidth={layout.sideNav.width}
-        m={{ hide: true }}
-        position="sticky"
-        top="80"
-        overflow="auto"
-        style={{ height: "calc(100vh - var(--static-space-80))" }}
-      >
-        {/* Could include a "Categories" or "On this page" section */}
-      </Column>
     </Row>
   );
 }

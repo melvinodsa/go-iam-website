@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
 import { Button, Fade, Flex, Logo, NavIcon, Row, Kbar, useTheme, Column } from "@once-ui-system/core";
 import { layout, routes, social } from "@/resources/once-ui.config";
+import { isDesktop } from 'react-device-detect';
 import { NavigationItem } from "./Sidebar";
 
 function Navbar({ navigationItems }: { navigationItems: NavigationItem[] }) {
@@ -116,11 +117,12 @@ function Navbar({ navigationItems }: { navigationItems: NavigationItem[] }) {
                     top: '12px',
                     zIndex: 1000,
                     backdropFilter: "blur(8px)",
+                    width: '100vw'
                 }}>
                     <Logo className="dark-flex" wordmark="/trademarks/wordmark-dark.svg" size="s" href="/" />
                     <Logo className="light-flex" wordmark="/trademarks/wordmark-light.svg" size="s" href="/" />
 
-                    {(isDocsPage || isBlogPage) && <Kbar items={kbar} radius="full" background="neutral-alpha-weak">
+                    {(isDocsPage || isBlogPage) && isDesktop && <Kbar items={kbar} radius="full" background="neutral-alpha-weak">
                         <Button data-border="rounded" size="s" variant="tertiary" weight="default">
                             <Row vertical="center" gap="16" style={{ marginLeft: '-0.5rem' }} paddingRight="8">
                                 <Row background="neutral-alpha-medium" paddingX="8" paddingY="4" radius="full" data-scaling="90" textVariant="body-default-xs" onBackground="neutral-medium">{isMac ? 'Cmd' : 'Ctrl'} k</Row>
@@ -129,7 +131,7 @@ function Navbar({ navigationItems }: { navigationItems: NavigationItem[] }) {
                         </Button>
                     </Kbar>}
 
-                    <Row gap="s" vertical="center">
+                    <Row gap="s" vertical="center" style={{ marginTop: !isDesktop ? '20px' : '0' }}>
                         <Button
                             href={social.docs}
                             prefixIcon="book"
