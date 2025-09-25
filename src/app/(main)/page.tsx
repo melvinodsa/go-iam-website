@@ -96,6 +96,16 @@ export default function Home() {
               Get Started
             </Button>
             <Button
+              href={`/blog/why-go-iam`}
+              variant="secondary"
+              data-border="rounded"
+              prefixIcon="blog"
+              size="l"
+              target="_blank"
+            >
+              Why Go IAM
+            </Button>
+            <Button
               href={social.github}
               variant="secondary"
               data-border="rounded"

@@ -38,7 +38,7 @@ const Footer = () => {
                     size="s"
                     prefixIcon="reddit"
                 >
-                    Reddit Community
+                    Community
                 </Button>
                 <Button
                     href={social.github}

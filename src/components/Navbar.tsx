@@ -110,18 +110,16 @@ function Navbar({ navigationItems }: { navigationItems: NavigationItem[] }) {
 
     return (
         <>
-            <Flex as="header" position="sticky" top="0" zIndex={9} fillWidth paddingY="8" paddingX="l">
-                <Row maxWidth={layout.header.width} fillWidth horizontal="center" gap="80" vertical="center" style={{
+            <Flex as="header" position="sticky" top="0" zIndex={9} fillWidth paddingY="8">
+                <Column maxWidth={layout.header.width} fillWidth horizontal="center" style={{
                     position: "fixed",
                     top: '12px',
-                    left: '50%',
-                    transform: 'translateX(-50%)',
                     zIndex: 1000,
                     backdropFilter: "blur(8px)",
                 }}>
                     <Logo className="dark-flex" wordmark="/trademarks/wordmark-dark.svg" size="s" href="/" />
                     <Logo className="light-flex" wordmark="/trademarks/wordmark-light.svg" size="s" href="/" />
-                    
+
                     {(isDocsPage || isBlogPage) && <Kbar items={kbar} radius="full" background="neutral-alpha-weak">
                         <Button data-border="rounded" size="s" variant="tertiary" weight="default">
                             <Row vertical="center" gap="16" style={{ marginLeft: '-0.5rem' }} paddingRight="8">
@@ -130,7 +128,7 @@ function Navbar({ navigationItems }: { navigationItems: NavigationItem[] }) {
                             </Row>
                         </Button>
                     </Kbar>}
-                    
+
                     <Row gap="s" vertical="center">
                         <Button
                             href={social.docs}
@@ -155,7 +153,7 @@ function Navbar({ navigationItems }: { navigationItems: NavigationItem[] }) {
                             prefixIcon="reddit"
                             target="_blank"
                         >
-                            Reddit Community
+                            Community
                         </Button>
                         <Button
                             href={social.github}
@@ -167,7 +165,7 @@ function Navbar({ navigationItems }: { navigationItems: NavigationItem[] }) {
                             GitHub
                         </Button>
                     </Row>
-                </Row>
+                </Column>
             </Flex>
         </>
     );
