@@ -72,7 +72,10 @@ After configuring the auth provider, you need to register your client applicatio
    - **Tags**: Comma separated tags. Eg: goiam
    - **Default Client**: Check _Set as Go IAM Client_ checkbox. This makes sure this client has to be used by Go IAM for its own auth purpose.
    - **Redirect Urls**: When you check _Set as Go IAM Client_, the redirect url will be automatically set to `<baseUrl>/verify`
-4. **Select Auth Providers**: Choose which auth providers this client can use. The one you created in the previous step
+4. **Select Auth Providers** or **Set as service account**: Choose which auth providers this client can use. The one you created in the previous step
+   - **Service Account**: If you want to use this client as a service account, check the _Set as Service Account_ checkbox. This is useful for backends or daemons that need to authenticate without user interaction.
+   - **Linked User Email**: Specify the email address of the user to link this service account to. The access will be based on the linked user's roles and permissions.
+   - **Auth Provider**: If auth provider is selected, user's identity is used for authentication. Correspondingly the access will be based on the user's roles and permissions.
 5. **Save Client**: Click "Save Changes" to create the client
 
 ### Step 3: Login
