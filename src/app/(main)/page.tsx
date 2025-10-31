@@ -46,7 +46,7 @@ export default function Home() {
             <Text marginX="4">
               <LetterFx trigger="instant">Open Source IAM Platform</LetterFx>
             </Text>
-            <a href="https://awesome-go.com/authentication-and-authorization/" target="_blank" rel="noopener noreferrer">
+            <a href="https://github.com/avelino/awesome-go?tab=readme-ov-file#authentication-and-authorization" target="_blank" rel="noopener noreferrer">
               <img alt="Mentioned in Awesome Go" src="https://awesome.re/mentioned-badge.svg"></img>
             </a>
           </Badge>
