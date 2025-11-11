@@ -36,6 +36,8 @@ import { GrDeploy } from "react-icons/gr";
 import { FaReddit } from "react-icons/fa";
 import { FaKey } from "react-icons/fa";
 import { FaBloggerB } from "react-icons/fa6";
+import { MdIntegrationInstructions } from "react-icons/md";
+
 
 
 
@@ -68,6 +70,7 @@ export const iconLibrary: Record<string, IconType> = {
   deploy: GrDeploy,
   reddit: FaReddit,
   blog: FaBloggerB,
+  instructions: MdIntegrationInstructions,
 };
 
 

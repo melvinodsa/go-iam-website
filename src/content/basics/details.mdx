@@ -72,7 +72,7 @@ sequenceDiagram
     My App-->>Go IAM: Can you share identity of the caller
     Go IAM-->>Redis: Can you get the identity of the caller I had cached
     Redis-->>Go IAM: Here you go, it is User 1
-    Go IAM -->> My App 2: Here you go, its User 1 and its access
+    Go IAM -->> My App: Here you go, its User 1 and its access
     My App ->> User 1: I can see that you are `User 1` and <br/>you have access to call `cool` api<br/>Here you go with the response
 ```
 

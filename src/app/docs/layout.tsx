@@ -120,7 +120,7 @@ export default function RootLayout({
       <Providers>
         <Column as="body" background="page" fillWidth margin="0" padding="0">
           <Navbar navigationItems={navigationItems} />
-          <Row marginTop='104' style={{ height: "calc(100vh - var(--static-space-128) - var(--static-space-12) - (var(--responsive-space-m)*3))" }} horizontal="start">
+          <Row marginTop='48' style={{ height: "calc(100vh - var(--static-space-48) - var(--static-space-12) - (var(--responsive-space-m)*3))" }} horizontal="start">
             <Sidebar
               maxWidth={100}
               style={{ height: "calc(100vh - var(--static-space-64)*2)", borderTop: "0", borderRight: "0" }}

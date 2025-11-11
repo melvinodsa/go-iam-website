@@ -107,6 +107,14 @@ function Navbar({ navigationItems }: { navigationItems: NavigationItem[] }) {
         },
     ];
 
+    let containerStyle = {};
+    if (isDesktop) {
+        containerStyle = {
+            flexDirection: "row",
+            justifyContent: "space-between",
+        }
+    }
+
 
 
     return (
@@ -117,7 +125,8 @@ function Navbar({ navigationItems }: { navigationItems: NavigationItem[] }) {
                     top: '12px',
                     zIndex: 1000,
                     backdropFilter: "blur(8px)",
-                    width: '100vw'
+                    width: '100vw',
+                    ...containerStyle,
                 }}>
                     <Logo className="dark-flex" wordmark="/trademarks/wordmark-dark.svg" size="s" href="/" />
                     <Logo className="light-flex" wordmark="/trademarks/wordmark-light.svg" size="s" href="/" />
