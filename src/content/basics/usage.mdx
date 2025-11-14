@@ -6,11 +6,9 @@ navLabel: "usage"
 navIcon: "instructions"
 ---
 
-# Using Go IAM
-
 Go IAM is designed with **multi-tenancy** at its core, using **Projects** to provide complete isolation between different applications and environments. This guide will walk you through the essential steps to get started with Go IAM.
 
-## 🏗️ Getting Started
+# 🏗️ Getting Started
 
 To use Go IAM effectively, you need to set up:
 
@@ -18,7 +16,7 @@ To use Go IAM effectively, you need to set up:
 2. **Client** - Frontend or Backend application configuration
 3. **Auth Provider** - External authentication integration
 
-Everything in Go IAM operates within the context of a **Project**, ensuring complete data isolation and security.
+Everything in Go IAM operates within the context of a **Project**, ensuring complete data isolation and security
 
 ---
 
@@ -315,3 +313,295 @@ To update an existing auth provider, follow these steps:
 
 ---
 
+# Using Go IAM
+
+Once the setup is done, you can start using Go IAM by creating resources, roles, and users within your project. Refer to the following guides for detailed instructions on each component:
+
+1. **Resources** - Anything that needs access control should be defined as a resource
+2. **Roles** - Define permissions and assign them to users
+3. **Users** - Manage user accounts, their access rights, policies
+
+<a href="/api-spec" target='_blank'>API documentation</a> is also available for programmatic access to all Go IAM features. Also <a href="/docs/sdk/overview" target='_blank'>SDKs</a> for various programming languages are provided to simplify integration.
+
+
+## Resources
+
+Resources represent any entity that requires access control within your application. This could be APIs, services, or specific data objects. We will see how to confgure this through the dashboard.
+
+### ➕ Creating a New Resource
+1. **Navigate to Resources**
+   - Go to `Resources` in the sidebar under `User Management`
+
+<div className='display-flex flex-column full-width align-center'>
+<Media src="/images/screenshots/user-management/resources/List.png" alt="List Resources Page" 
+  radius="xl"
+  caption="List Resources Page"
+  style={{ boxShadow: '0 4px 14px rgba(0, 0, 0, 0.1)' }}
+  maxWidth={48}/>
+</div>
+
+2. **Click on Add Button**
+3. **Fill in the Resource Details**
+   - Name: Descriptive name for the resource
+   - Key: Unique identifier for the resource. Should not be changed after creation
+   - Description: Brief description of the resource
+4. **Save Resource**
+   - Click **`Save Changes`** button
+<div className='display-flex flex-column full-width align-center'>
+<Media src="/images/screenshots/user-management/resources/Create.png" alt="Create Resource Widget" 
+  radius="xl"
+  caption="Create Resource Widget"
+  style={{ boxShadow: '0 4px 14px rgba(0, 0, 0, 0.1)' }}
+  maxWidth={48}/>
+</div>
+
+### 🔄 Updating Resource
+
+To update an existing resource, follow these steps:
+1. **Navigate to Resources**
+   - Go to `Resources` in the sidebar under `User Management`
+2. **Select Resource to Edit**
+   - Find the resource in the list
+   - Click the **`Edit`** button on the right side
+3. **Modify Details**
+   - Update **Name** or **Description**
+4. **Save Changes**
+   - Click **`Save Changes`** to apply updates
+<div className='display-flex flex-column full-width align-center'>
+<Media src="/images/screenshots/user-management/resources/Update.png" alt="Update Resource Widget" 
+  radius="xl"
+  caption="Update Resource Widget"
+  style={{ boxShadow: '0 4px 14px rgba(0, 0, 0, 0.1)' }}
+  maxWidth={48}/>
+</div>
+
+### Disable Resource
+To disable a resource, follow these steps:
+1. **Navigate to Resources**
+   - Go to `Resources` in the sidebar under `User Management`
+2. **Select Resource to Disable**
+   - Find the resource in the list
+   - Click the **`Disable`** button on the right side
+3. **Confirm Disable**
+   - A confirmation dialog will appear
+   - Click **`Disable Resource`** to permanently disable the resource
+<div className='display-flex flex-column full-width align-center'>
+<Media src="/images/screenshots/user-management/resources/Disable.png" alt="Disable Resource Confirmation Widget" 
+  radius="xl"
+  caption="Disable Resource Confirmation Widget"
+  style={{ boxShadow: '0 4px 14px rgba(0, 0, 0, 0.1)' }}
+  maxWidth={48}/>
+</div>
+
+---
+
+## Roles
+Roles define a set of permissions that can be assigned to users. They help manage access control efficiently by grouping permissions together.
+### ➕ Creating a New Role
+1. **Navigate to Roles**
+   - Go to `Roles` in the sidebar under `User Management`
+<div className='display-flex flex-column full-width align-center'>
+<Media src="/images/screenshots/user-management/roles/List.png" alt="List Roles Page" 
+  radius="xl"
+  caption="List Roles Page"
+  style={{ boxShadow: '0 4px 14px rgba(0, 0, 0, 0.1)' }}
+  maxWidth={48}/>
+</div>
+2. **Click on Add Button**
+3. **Fill in the Role Details**
+   - Name: Descriptive name for the role
+   - Description: Brief description of the role
+
+<div className='display-flex flex-column full-width align-center'>
+<Media src="/images/screenshots/user-management/roles/Create.png" alt="Create Role Widget" 
+  radius="xl"
+  caption="Create Role Widget"
+  style={{ boxShadow: '0 4px 14px rgba(0, 0, 0, 0.1)' }}
+  maxWidth={48}/>
+</div>
+4. **Assign Resources**
+   - Select resources and define permissions for each
+5. **Save Role**
+   - Click **`Save Changes`** button
+<div className='display-flex flex-column full-width align-center'>
+<Media src="/images/screenshots/user-management/roles/Add-Resource.png" alt="Assign Resources to Role Widget" 
+  radius="xl"
+  caption="Assign Resources to Role Widget"
+  style={{ boxShadow: '0 4px 14px rgba(0, 0, 0, 0.1)' }}
+  maxWidth={48}/>
+</div>
+### 🔄 Updating Role
+To update an existing role, follow these steps:
+1. **Navigate to Roles**
+   - Go to `Roles` in the sidebar under `User Management`
+2. **Select Role to Edit**
+   - Find the role in the list
+   - Click the **`Edit`** button on the right side
+3. **Modify Details**
+   - Update **Name**, **Description**, or resource permissions
+4. **Save Changes**
+   - Click **`Save Changes`** to apply updates
+<div className='display-flex flex-column full-width align-center'>
+<Media src="/images/screenshots/user-management/roles/Update.png" alt="Update Role Widget" 
+  radius="xl"
+  caption="Update Role Widget"
+  style={{ boxShadow: '0 4px 14px rgba(0, 0, 0, 0.1)' }}
+  maxWidth={48}/>
+</div>
+### Disable Role
+To disable a role, follow these steps:
+1. **Navigate to Roles**
+   - Go to `Roles` in the sidebar under `User Management`
+2. **Select Role to Disable**
+   - Find the role in the list
+   - Click the **`Disable`** button on the right side
+3. **Confirm Disable**
+   - A confirmation dialog will appear
+   - Click **`Disable Role`** to permanently disable the role
+<div className='display-flex flex-column full-width align-center'>
+<Media src="/images/screenshots/user-management/roles/Disable.png" alt="Disable Role Confirmation Widget" 
+  radius="xl"
+  caption="Disable Role Confirmation Widget"
+  style={{ boxShadow: '0 4px 14px rgba(0, 0, 0, 0.1)' }}
+  maxWidth={48}/>
+</div>
+
+## Users
+Users are the individuals who will access your application. They can be assigned roles to define their permissions. When someone sign-up, their user is automatically created. Linked users will be automatically created when a client with service account is created. The email of the user will be specified in the client creation form.
+
+### Createing a New User
+1. **Navigate to Users**
+   - Go to `Users` in the sidebar under `User Management`
+<div className='display-flex flex-column full-width align-center'>
+<Media src="/images/screenshots/user-management/users/List.png" alt="List Users Page" 
+  radius="xl"
+  caption="List Users Page"
+  style={{ boxShadow: '0 4px 14px rgba(0, 0, 0, 0.1)' }}
+  maxWidth={48}/>
+</div>
+2. **Click on Add Button**
+3. **Fill in the User Details**
+   - Email: User's email address
+   - Name: User's full name
+   - Phone: User's phone number (optional)
+4. **Save User**
+   - Click **`Save Changes`** button
+<div className='display-flex flex-column full-width align-center'>
+<Media src="/images/screenshots/user-management/users/Create.png" alt="Create User Widget" 
+  radius="xl"
+  caption="Create User Widget"
+  style={{ boxShadow: '0 4px 14px rgba(0, 0, 0, 0.1)' }}
+  maxWidth={48}/>
+</div>
+### 🔄 Updating user
+To update an existing user, follow these steps:
+1. **Navigate to Users**
+   - Go to `Users` in the sidebar under `User Management`
+2. **Select User to Edit**
+   - Find the user in the list
+   - Click the **`Edit`** button on the right side
+3. **Modify Details**
+   - Update **Name**, **Phone**, **Email**
+4. **Save Changes**
+   - Click **`Save Changes`** to apply updates
+<div className='display-flex flex-column full-width align-center'>
+<Media src="/images/screenshots/user-management/users/Update.png" alt="Update User Widget" 
+  radius="xl"
+  caption="Update User Widget"
+  style={{ boxShadow: '0 4px 14px rgba(0, 0, 0, 0.1)' }}
+  maxWidth={48}/>
+</div>
+### Disable User
+To disable a user, follow these steps:
+1. **Navigate to Users**
+   - Go to `Users` in the sidebar under `User Management`
+2. **Select User to Disable**
+   - Find the user in the list
+   - Click the **`Disable`** button on the right side
+3. **Confirm Disable**
+   - A confirmation dialog will appear
+   - Click **`Disable User`** to permanently disable the user
+<div className='display-flex flex-column full-width align-center'>
+<Media src="/images/screenshots/user-management/users/Disable.png" alt="Disable User Confirmation Widget" 
+  radius="xl"
+  caption="Disable User Confirmation Widget"
+  style={{ boxShadow: '0 4px 14px rgba(0, 0, 0, 0.1)' }}
+  maxWidth={48}/>
+</div>
+
+### Updating User Roles
+To update the roles assigned to a user, follow these steps:
+1. **Navigate to Users**
+   - Go to `Users` in the sidebar under `User Management`
+2. **Select User to Update Roles**
+   - Find the user in the list
+   - Click the **`Edit Roles`** button on the right side
+3. **Modify Roles**
+   - Select or deselect roles to assign or remove them from the user
+4. **Save Changes**
+   - Click **`Save Changes`** to apply updates
+<div className='display-flex flex-column full-width align-center'>
+<Media src="/images/screenshots/user-management/users/Add-Role.png" alt="Update User Roles Widget" 
+  radius="xl"
+  caption="Update User Roles Widget"
+  style={{ boxShadow: '0 4px 14px rgba(0, 0, 0, 0.1)' }}
+   maxWidth={48}/>  
+</div>
+
+### Updating User Policies
+Unline roles, resources the user get access via policies doesn't get removed if you remove a policy from a user.
+To update the policies assigned to a user, follow these steps:
+1. **Navigate to Users**
+   - Go to `Users` in the sidebar under `User Management`
+2. **Select User to Update Policies**
+   - Find the user in the list
+   - Click the **`Edit Policies`** button on the right side
+3. **Modify Policies**
+   - Select the policies to assign to the user. Based on the policy you might have to select other user/roles to which the policy should be associated with the user
+4. **Save Changes**
+   - Click **`Save Changes`** to apply updates
+<div className='display-flex flex-column full-width align-center'>
+<Media src="/images/screenshots/user-management/users/Policy.png" alt="Update User Policies Widget" 
+  radius="xl"
+  caption="Update User Policies Widget"
+  style={{ boxShadow: '0 4px 14px rgba(0, 0, 0, 0.1)' }}
+  maxWidth={48}/>  
+</div>
+
+### Transfering Ownership
+To transfer ownership of a user to another user, follow these steps:
+1. **Navigate to Users**
+   - Go to `Users` in the sidebar under `User Management`
+2. **Select User to Transfer Ownership**
+   - Find the user in the list
+   - Click the **`Transfer Ownership`** button on the right side
+3. **Select New Owner**
+   - Choose the user who will become the new owner
+4. **Confirm Transfer**
+   - Click **`Save Changes`** to complete the process
+<div className='display-flex flex-column full-width align-center'>
+<Media src="/images/screenshots/user-management/users/Ownership.png" alt="Transfer Ownership Confirmation Widget" 
+  radius="xl"
+  caption="Transfer Ownership Confirmation Widget"
+  style={{ boxShadow: '0 4px 14px rgba(0, 0, 0, 0.1)' }}
+  maxWidth={48}/> 
+</div>
+
+### Copy User Resources
+To copy resources from one user to another, follow these steps:
+1. **Navigate to Users**
+   - Go to `Users` in the sidebar under `User Management`
+2. **Select User to Copy Resources**
+   - Find the user in the list
+   - Click the **`Copy Resources`** button on the right side
+3. **Select Target User**
+   - Choose the user who will receive the copied resources
+4. **Confirm Copy**
+   - Click **`Save Changes`** to complete the process
+<div className='display-flex flex-column full-width align-center'>
+<Media src="/images/screenshots/user-management/users/Copy.png" alt="Copy User Resources Confirmation Widget" 
+  radius="xl"
+  caption="Copy User Resources Confirmation Widget"
+  style={{ boxShadow: '0 4px 14px rgba(0, 0, 0, 0.1)' }}
+  maxWidth={48}/>
+</div>
