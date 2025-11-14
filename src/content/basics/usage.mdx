@@ -1,0 +1,317 @@
+---
+title: "Using Go IAM"
+updatedAt: "2025-11-14"
+summary: "Detailed explanation on how to use Go IAM in your applications, including authentication flows and best practices."
+navLabel: "usage"
+navIcon: "instructions"
+---
+
+# Using Go IAM
+
+Go IAM is designed with **multi-tenancy** at its core, using **Projects** to provide complete isolation between different applications and environments. This guide will walk you through the essential steps to get started with Go IAM.
+
+## 🏗️ Getting Started
+
+To use Go IAM effectively, you need to set up:
+
+1. **Project** - Your isolated workspace
+2. **Client** - Frontend or Backend application configuration
+3. **Auth Provider** - External authentication integration
+
+Everything in Go IAM operates within the context of a **Project**, ensuring complete data isolation and security.
+
+---
+
+## 📁 Projects
+
+Projects are the foundation of Go IAM's multi-tenant architecture. Each project provides an isolated environment for your applications, users, roles, and resources.
+
+### Default Project
+
+When Go IAM is first set up, a **Default Project** is automatically created. This project is intended for:
+- **Administrative purposes** - Managing Go IAM itself
+- **System configuration** - Initial setup and testing
+
+> 💡 **Best Practice**: Create a separate project for each of your applications rather than using the Default Project for production workloads.
+
+### Accessing Projects
+
+You can access projects through:
+- **Navbar** - Quick project switcher in the top navigation
+- **Settings Menu** - Full project management under `Projects`
+
+---
+
+### ➕ Creating a New Project
+
+<div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-6">
+  <div className="order-2 md:order-1">
+
+#### Steps to Create
+
+1. **Navigate to Projects**
+   - Go to `Settings` → `Projects`
+   - Or use the navbar project selector
+
+<div className='display-flex flex-column full-width align-center'>
+<Media src="/images/screenshots/projects/List.png" alt="List projects Page" 
+  radius="xl"
+  caption="List Projects Page"
+  style={{ boxShadow: '0 4px 14px rgba(0, 0, 0, 0.1)' }}
+  maxWidth={48}/>
+</div>
+
+2. **Add New Project**
+   - Click the **`Add`** button in the top-right corner
+   - Fill in the project details:
+     - **Name**: Descriptive project name
+     - **Tags**: Categorization labels
+     - **Description**: Project purpose and details
+
+3. **Save Project**
+   - Click **`Save Changes`** button
+   - Your new project is now ready to use
+
+<div className='display-flex flex-column full-width align-center'>
+<Media src="/images/screenshots/projects/Create.png" alt="Create project Page" 
+  radius="xl"
+  caption="Create Project Widget"
+  style={{ boxShadow: '0 4px 14px rgba(0, 0, 0, 0.1)' }}
+  maxWidth={48}/>
+</div>
+
+  </div>
+
+
+  <div className="order-1 md:order-2">
+
+#### Example Project Form Fields
+
+```text
+Name: "My Production App"
+Tags: "production,web-app"
+Description: "Production environment for our main web application"
+```
+
+  </div>
+</div>
+
+---
+
+### 🎯 Project Scope
+
+The **Project Scope** determines which project you're currently working with. All operations are scoped to the selected project.
+
+### Switching Projects
+
+<div className="border rounded-lg p-4 my-4 bg-neutral-weak">
+
+**📍 Location**: Top-left corner of the navbar
+
+1. **Current Scope**: Displays the currently selected project name
+2. **Project Dropdown**: Click to see all available projects
+3. **Select Project**: Choose the project you want to work with
+
+
+<div className='display-flex flex-column full-width align-center'>
+<Media src="/images/screenshots/projects/Navbar.png" alt="Project Switcher in Navbar" 
+  radius="xl"
+  caption="Project Switcher in Navbar"
+  style={{ boxShadow: '0 4px 14px rgba(0, 0, 0, 0.1)' }}
+  maxWidth={48}/>
+</div>
+
+</div>
+
+### Scoped Operations
+
+When you select a project, the following are automatically scoped to that project:
+
+<Table 
+   data={{
+      headers: [
+         { content: 'Component', key: 'component' },
+         { content: 'Description', key: 'description' }
+      ],
+      rows: [
+         ['Users', 'User accounts and profiles'],
+         ['Roles', 'Permission groups and access levels'],
+         ['Resources', 'Protected items and endpoints'],
+         ['Clients', 'Application configurations'],
+         ['Auth Providers', 'External authentication settings']
+      ]
+   }}
+/>
+
+> ⚠️ **Important**: Always verify you're in the correct project scope before making changes.
+
+---
+
+### ✏️ Updating Projects
+
+Projects can be modified after creation (except for the Default Project).
+
+#### Update Process
+1. **Navigate to Projects**
+   - Go to `Settings` → `Projects`
+
+2. **Select Project to Edit**
+   - Find the project in the list
+   - Click the **`Edit`** button on the right side
+   - *Note: Default Project cannot be edited*
+
+3. **Modify Details**
+   - Update **Name**, **Tags**, or **Description**
+   - Review your changes
+
+4. **Save Changes**
+   - Click **`Save Changes`** to apply updates
+
+<div className='display-flex flex-column full-width align-center'>
+<Media src="/images/screenshots/projects/Update.png" alt="Update project Page" 
+  radius="xl"
+  caption="Update Project Widget"
+  style={{ boxShadow: '0 4px 14px rgba(0, 0, 0, 0.1)' }}
+  maxWidth={48}/>
+</div>
+
+#### What Can Be Updated
+
+<Table 
+   data={{
+      headers: [
+         { content: 'Field', key: 'field' },
+         { content: 'Editable', key: 'editable' },
+         { content: 'Notes', key: 'notes' }
+      ],
+      rows: [
+         ['Name', '✅ Yes', 'Display name for the project'],
+         ['Tags', '✅ Yes', 'Categorization labels'],
+         ['Description', '✅ Yes', 'Project details and purpose'],
+         ['Default Project', '❌ No', 'System project cannot be modified']
+      ]
+   }}
+/>
+
+---
+
+### 💡 Best Practices
+
+#### Project Organization
+
+- **One Project Per Environment** - Separate dev, staging, production
+- **Descriptive Naming** - Clear project names and descriptions
+- **Consistent Tagging** - Use tags for categorization and filtering
+
+This multi-tenant architecture ensures that your applications remain completely isolated while providing the flexibility to manage multiple environments and applications from a single Go IAM instance.
+
+## 🔧 Client Configuration
+
+After setting up your project, the next step is to configure a **Client** for your application.
+
+### Client Types
+
+Go IAM supports both:
+- **Frontend Applications** - Single Page Apps, Mobile Apps
+- **Backend Services** - APIs, Microservices, Server Applications
+
+👉 **Continue to**: [Client Configuration Guide](/docs/setup/configure-client) for setting up a client
+
+---
+
+### 🛠️ Managing Clients
+
+Once you have clients configured, you can manage them through the admin interface.
+
+#### Accessing Client Management
+
+1. **Navigate to Clients**
+   - Go to `Settings` → `Clients`
+   - View all clients in the current project scope
+
+<div className='display-flex flex-column full-width align-center'>
+<Media src="/images/screenshots/settings/client/List.png" alt="Client List Page" 
+  radius="xl"
+  caption="Client List Page"
+  style={{ boxShadow: '0 4px 14px rgba(0, 0, 0, 0.1)' }}
+  maxWidth={48}/>
+</div>
+
+2. **Update Client Configuration**
+   - Click the **`Edit`** button next to any client
+   - Modify client settings as needed
+   - Save your changes
+
+<div className='display-flex flex-column full-width align-center'>
+<Media src="/images/screenshots/settings/client/Update-Auth-P.png" alt="Client Update with Auth Provider Widget" 
+  radius="xl"
+  caption="Client Update with Auth Provider Widget"
+  style={{ boxShadow: '0 4px 14px rgba(0, 0, 0, 0.1)' }}
+  maxWidth={48}/>
+</div>
+<div className='display-flex flex-column full-width align-center'>
+<Media src="/images/screenshots/settings/client/Update-Service-Account.png" alt="Client Update with Service Account Widget" 
+  radius="xl"
+  caption="Client Update with Service Account Widget"
+  style={{ boxShadow: '0 4px 14px rgba(0, 0, 0, 0.1)' }}
+  maxWidth={48}/>
+</div>
+
+### Client Operations
+
+Common client management tasks include:
+- **Updating credentials** - Rotate client secrets
+- **Configuring redirects** - Update callback URLs
+- **Managing Auth providers** - Change the auth provider linked to the client (only applicable for non service account based clients)
+
+
+---
+
+## Auth Provider
+If you have already setup an auth provider you can skip this. Currently the platform supports Google/Microsoft/GitHub any OpenID Connect Provider. Note that auth provider created under one project is not available to other projects. You can find `Auth Providers` page in `Settings Menu`. 
+
+### ➕ Creating a New Auth Provider
+1. **Navigate to Auth Providers**
+   - Go to `Settings` → `Auth Providers`
+2. **Click on Add Button**
+<div className='display-flex flex-column full-width align-center'>
+<Media src="/images/screenshots/settings/authprovider/List.png" alt="List Auth Providers Page" 
+  radius="xl"
+  caption="List Auth Providers Page"
+  style={{ boxShadow: '0 4px 14px rgba(0, 0, 0, 0.1)' }}
+  maxWidth={48}/>
+</div>
+3. **Fill in the Auth Provider Details**
+   - Name: Descriptive name for the auth provider
+   - Type: Select the type of auth provider (Google, Microsoft, GitHub, OIDC)
+   - Client ID and Client Secret: Obtain these from the respective auth provider's developer console
+4. **Save Auth Provider**
+   - Click **`Save Changes`** button
+<div className='display-flex flex-column full-width align-center'>
+<Media src="/images/screenshots/settings/authprovider/Create.png" alt="Create Auth Provider Widget" 
+  radius="xl"
+  caption="Create Auth Provider Widget"
+  style={{ boxShadow: '0 4px 14px rgba(0, 0, 0, 0.1)' }}
+  maxWidth={48}/>
+</div>
+### 🔄 Updating Auth Provider
+To update an existing auth provider, follow these steps:
+1. **Navigate to Auth Providers**
+   - Go to `Settings` → `Auth Providers`
+2. **Select Auth Provider to Edit**
+   - Find the auth provider in the list
+   - Click the **`Edit`** button on the right side
+3. **Modify Details**
+   - Update **Name**, **Client ID**, or **Client Secret** or **Callback URL**
+4. **Save Changes**
+   - Click **`Save Changes`** to apply updates
+<div className='display-flex flex-column full-width align-center'>
+<Media src="/images/screenshots/settings/authprovider/Update.png" alt="Update Auth Provider Widget" 
+  radius="xl"
+  caption="Update Auth Provider Widget"
+  style={{ boxShadow: '0 4px 14px rgba(0, 0, 0, 0.1)' }}
+  maxWidth={48}/>
+</div>
+
+---
+
