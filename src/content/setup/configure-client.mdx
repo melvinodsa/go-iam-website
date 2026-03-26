@@ -42,8 +42,9 @@ Before your applications can authenticate users, you need to configure authentic
 4. **Configure Credentials**:
    - **Client ID**: Your Google OAuth 2.0 client ID
    - **Client Secret**: Your Google OAuth 2.0 client secret
-   - **Redirect URI**: Configure the callback URL for your application
+   - **Redirect URI**: Configure the callback URL for your application - typically `http://localhost:3000/auth/v1/authp-callback` if you are running docker setup or localsetup with default ports
    - You can follow the [official documentation](https://developers.google.com/identity/protocols/oauth2) for more info.
+   - Note: Google will redirect the user to goiam server backend (`/auth/v1/authp-callback`) and it redirects to the redirect url mention by client. See the next step to understand how to configure the redirect url in client setup.
 5. **Save Provider**: Click "Save changes" to store the provider settings
 
 #### Getting Google OAuth Credentials
