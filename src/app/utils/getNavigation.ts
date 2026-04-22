@@ -4,22 +4,22 @@ import matter from 'gray-matter';
 import { Schemes } from '@once-ui-system/core';
 
 interface NavigationItem {
-    slug: string;
-    title: string;
-    label?: string;
-    navTag?: string;
-    navLabel?: string;
-    navIcon?: string;
-    navTagVariant?: Schemes;
-    keywords?: string;
-    children?: NavigationItem[];
-    order?: number;
+  slug: string;
+  title: string;
+  label?: string;
+  navTag?: string;
+  navLabel?: string;
+  navIcon?: string;
+  navTagVariant?: Schemes;
+  keywords?: string;
+  children?: NavigationItem[];
+  order?: number;
 }
 
 interface MetaData {
-    title?: string;
-    order?: number;
-    pages?: Record<string, number>; 
+  title?: string;
+  order?: number;
+  pages?: Record<string, number>;
 }
 
 // Shared sorting function to ensure consistent sorting at all levels
@@ -28,27 +28,27 @@ function sortItems(items: NavigationItem[]): NavigationItem[] {
     // First, separate uncategorized items (files) from categorized items (directories)
     const aIsCategory = !!a.children;
     const bIsCategory = !!b.children;
-    
+
     // Prioritize uncategorized pages (files) over categorized ones (directories)
     if (!aIsCategory && bIsCategory) return -1;
     if (aIsCategory && !bIsCategory) return 1;
-    
+
     // If both are the same type (both files or both directories)
     // Then prioritize items with order property
     const aHasOrder = typeof a.order === 'number';
     const bHasOrder = typeof b.order === 'number';
-    
+
     // If only one item has order, prioritize it
     if (aHasOrder && !bHasOrder) return -1;
     if (!aHasOrder && bHasOrder) return 1;
-    
+
     // If both have order, sort by order
     if (aHasOrder && bHasOrder) {
       if (a.order !== b.order) {
         return a.order! - b.order!;
       }
     }
-    
+
     // Fall back to alphabetical
     return a.title.localeCompare(b.title);
   });
@@ -56,10 +56,10 @@ function sortItems(items: NavigationItem[]): NavigationItem[] {
 
 export default function getNavigation(dirPath = path.join(process.cwd(), 'src/content')): NavigationItem[] {
   const entries = fs.readdirSync(dirPath, { withFileTypes: true });
-  
+
   const dirMetaPath = path.join(dirPath, 'meta.json');
   let dirMeta: MetaData | null = null;
-  
+
   try {
     if (fs.existsSync(dirMetaPath)) {
       const metaContent = fs.readFileSync(dirMetaPath, 'utf8');
@@ -74,17 +74,17 @@ export default function getNavigation(dirPath = path.join(process.cwd(), 'src/co
     if (entry.name === 'meta.json') {
       return null;
     }
-    
+
     const fullPath = path.join(dirPath, entry.name);
-    
+
     if (entry.isDirectory()) {
       const metaPath = path.join(fullPath, 'meta.json');
       let metaData: MetaData | null = null;
-      
+
       try {
         if (fs.existsSync(metaPath)) {
           const metaContent = fs.readFileSync(metaPath, 'utf8');
-          
+
           try {
             metaData = JSON.parse(metaContent);
           } catch (jsonError) {
@@ -94,29 +94,29 @@ export default function getNavigation(dirPath = path.join(process.cwd(), 'src/co
       } catch (error) {
         console.error(`Error reading meta.json in ${fullPath}:`, error);
       }
-      
+
       // Get children and sort them before returning
       const children = getNavigation(fullPath);
-      
+
       const item = {
         slug: entry.name,
         title: metaData?.title || entry.name,
         order: metaData?.order,
         children: children, // Already sorted by the recursive call
       };
-      
+
       return item;
     } else if (entry.isFile() && entry.name && typeof entry.name === 'string' && entry.name.endsWith('.mdx')) {
       const fileContents = fs.readFileSync(fullPath, 'utf8');
       const { data } = matter(fileContents);
-      
+
       const filenameNoExt = entry.name.replace(/\.mdx$/, '');
-      
+
       let pageOrder: number | undefined;
-      
+
       if (dirMeta?.pages?.[entry.name] !== undefined) {
         pageOrder = dirMeta.pages[entry.name];
-      } 
+      }
       else if (dirMeta?.pages?.[filenameNoExt] !== undefined) {
         pageOrder = dirMeta.pages[filenameNoExt];
       }
@@ -135,15 +135,15 @@ export default function getNavigation(dirPath = path.join(process.cwd(), 'src/co
         keywords: data.keywords,
         order: pageOrder !== undefined ? pageOrder : data.order,
       };
-      
+
       return item;
     }
-    
+
     return null; // Skip non-directory, non-MDX files
   }).filter(Boolean) as NavigationItem[];
-  
+
   // Sort the items using the shared sorting function
   const sortedItems = sortItems(navigationItems);
-  
+
   return sortedItems;
 }
