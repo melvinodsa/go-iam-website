@@ -92,7 +92,7 @@ function createImage({ alt, src, ...props }: MediaProps & { src: string }) {
       radius="m"
       aspectRatio="16 / 9"
       sizes="(max-width: 960px) 100vw, 960px"
-      alt={alt}
+      alt={alt || ''}
       src={src}
       {...props}
     />

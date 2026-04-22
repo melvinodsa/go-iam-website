@@ -106,7 +106,7 @@ export default function getNavigation(dirPath = path.join(process.cwd(), 'src/co
       };
       
       return item;
-    } else if (entry.isFile() && entry.name.endsWith('.mdx')) {
+    } else if (entry.isFile() && entry.name && typeof entry.name === 'string' && entry.name.endsWith('.mdx')) {
       const fileContents = fs.readFileSync(fullPath, 'utf8');
       const { data } = matter(fileContents);
       

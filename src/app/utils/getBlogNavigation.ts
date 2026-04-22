@@ -56,7 +56,7 @@ export default function getBlogNavigation(
 
     const fullPath = path.join(dirPath, entry.name);
 
-    if (entry.isFile() && entry.name.endsWith('.mdx')) {
+    if (entry.isFile() && entry.name && typeof entry.name === 'string' && entry.name.endsWith('.mdx')) {
       const fileContents = fs.readFileSync(fullPath, 'utf8');
       const { data } = matter(fileContents);
 

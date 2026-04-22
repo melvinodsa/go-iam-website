@@ -58,7 +58,7 @@ export function getPages(customPath = ["src", "content"], order = 1): Post[] {
       } catch (error) {
         console.warn(`Error reading directory: ${filePath}`, error);
       }
-    } else if (file.endsWith('.mdx')) {
+    } else if (file && typeof file === 'string' && file.endsWith('.mdx')) {
       try {
         const fileContents = fs.readFileSync(filePath, 'utf8');
         const { data, content } = matter(fileContents);
